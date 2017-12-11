@@ -54,6 +54,11 @@ class Planet
 
 	}
 }
+function gravity(rocket, relativeGravity)
+{
+	return rocket.currMass * 9.81 * relativeGravity;
+}
+
 function main()
 {
 	console.log("Stuff");
@@ -96,14 +101,30 @@ function stableOrbit(orbit, rocket, planet, frequencyOfCalc)
 			//Again I don't think this term is quite right
 			var idealVelocity = orbit.findIdealVelocity(rocket.height, planet);
 			var theta;
+			var relativeGravity = 1 - (rocket.hVelocity / idealVelocity)
 
 			//Calculate theta here based on parameters
 
 
 			//console.log(idealVelocity);
-
+			var resultantUp = (Math.cos(rocket.rotation) * rocket.thrust[0] * 1000) - gravity(rocket, relativeGravity);
+			var resultantSideways = (Math.sin(rocket.rotation) * rocket.thrust[0] * 1000);
+			rocket.currMass -= (rocket.massInitial[0] - rocket.massFinal[0]) / (rocket.burnTime[0] * frequencyOfCalc);
+			var vAcceleration = resultantUp / rocket.currMass;
+			var hAcceleration = resultantSideways / rocket.currMass;
+			rocket.vVelocity += vAcceleration / frequencyOfCalc;
+			rocket.hVelocity += hAcceleration / frequencyOfCalc;
 		}
 	}
+	console.log("Done");
 
 }
+
+
+
+
+
+
+
+
 main();
