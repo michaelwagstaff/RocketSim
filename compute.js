@@ -10,7 +10,7 @@ class Orbit
 	{
 		var heightFromCentre = planet.radius + height;
 		var orbitalCircumference = 2 * (heightFromCentre) * Math.PI;
-		var timePeriod = 2 * Math.PI * Math.Pow((Math.Pow(heightFromCentre, 3) / stdGravitationalParameter), 0.5);
+		var timePeriod = 2 * Math.PI * Math.pow((Math.pow(heightFromCentre, 3) / planet.stdGravitationalParameter), 0.5);
 		var idealVelocity = orbitalCircumference / timePeriod;
 		return idealVelocity;
 	}
@@ -48,9 +48,9 @@ class Planet
 	{
 		this.speedAtEquator = speedAtEquator;
 		this.mass = mass;
-		this.radius = radius
+		this.radius = radius;
 		this.g = g;
-		this.stdGravitationalParameter = stdGravitationalParameter
+		this.stdGravitationalParameter = stdGravitationalParameter;
 
 	}
 }
@@ -77,17 +77,15 @@ function stableOrbit(orbit, rocket, planet, frequencyOfCalc)
 	for(var stage = 0;stage<count; stage++)
 	{
 		var remainingBurnTime = 0;
-		for(i = 0;i<count;i++)
+		for(i = 0;i<rocket.burnTime.length;i++)
 		{
-			//Will break on second stage
 			remainingBurnTime += rocket.burnTime[i] * frequencyOfCalc;
 		}
 		for (i = 0; i < rocket.burnTime[0] * frequencyOfCalc; i++)
 		{
-			console.log(i);
-			toApogee = Math.Pow(rocket.vVelocity, 2) / 19.6;
+			toApogee = Math.pow(rocket.vVelocity, 2) / 19.6;
 			remainingBurnTime-= 1;
-			console.log(remainingBurnTime);
+			//console.log(remainingBurnTime);
 			requiredImpulse = planet.g * rocket.currMass * (orbit.apogee - rocket.height - toApogee) //bad way of modelling this
 			/* Either:
 			- replace requiredImpulse calculation
@@ -102,9 +100,7 @@ function stableOrbit(orbit, rocket, planet, frequencyOfCalc)
 			//Calculate theta here based on parameters
 
 
-			console.log(idealVelocity);
-
-
+			//console.log(idealVelocity);
 
 		}
 	}
