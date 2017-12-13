@@ -37,6 +37,8 @@ class Rocket
 	{
 		this.thrust.push(thrust);
 		this.massInitial.push(massInitial);
+		this.currMass += this.massInitial[this.massInitial.length - 1];
+		this.totalMass += this.massInitial[this.massInitial.length - 1] ;
 		this.massFinal.push(massFinal);
 		this.burnTime.push(burnTime);
 		this.coefficientOfDrag.push(coefficientOfDrag);
@@ -56,6 +58,7 @@ class Planet
 }
 function gravity(rocket, relativeGravity)
 {
+	console.log(rocket.currMass);
 	return rocket.currMass * 9.81 * relativeGravity;
 }
 function airResistance(rocket)
@@ -84,6 +87,7 @@ function main()
 {
 	console.log("Stuff");
 	var rocket = new Rocket();
+	console.log(rocket.rotation	);
 	rocket.addStage(7607, 421300, 25600, 162, 0.25);
 	rocket.addStage(934, 96570, 3900, 397, 0.25);
 	var planet = new Planet(465.1, 5.972e24, 6371e3, 3.986e14);
@@ -92,7 +96,7 @@ function main()
 function findOrbitHeight(rocket, planet)
 {
 	var orbit = new Orbit(70000,0,0);
-	stableOrbit(orbit, rocket, planet, 100);
+	//stableOrbit(orbit, rocket, planet, 100);
 }
 function stableOrbit(orbit, rocket, planet, frequencyOfCalc)
 {
@@ -121,13 +125,16 @@ function stableOrbit(orbit, rocket, planet, frequencyOfCalc)
 			var impulsePerSecond = requiredImpulse * frequencyOfCalc / remainingBurnTime;
 			//Again I don't think this term is quite right
 			var idealVelocity = orbit.findIdealVelocity(rocket.height, planet);
+			var requiredHorizontalImpulse = (idealVelocity - rocket.hVelocity) * rocket.currMass;
 			var theta;
 			var relativeGravity = 1 - (rocket.hVelocity / idealVelocity)
 
+			theta = requiredImpulse / requiredHorizontalImpulse;
+
 			//Calculate theta here based on parameters
 			airResistance(rocket);
-
 			//console.log(idealVelocity);
+			//console.log(Math.cos(rocket.rotation) * rocket.thrust[0] * 1000 - gravity(rocket, relativeGravity));
 			var resultantUp = (Math.cos(rocket.rotation) * rocket.thrust[0] * 1000) - gravity(rocket, relativeGravity);
 			var resultantSideways = (Math.sin(rocket.rotation) * rocket.thrust[0] * 1000);
 			rocket.currMass -= (rocket.massInitial[0] - rocket.massFinal[0]) / (rocket.burnTime[0] * frequencyOfCalc);
