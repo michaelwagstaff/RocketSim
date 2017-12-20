@@ -2,10 +2,10 @@ body
 {
 	margin:0;
 	padding:0;
+	background-color:#131517;
 }
 canvas
 {
-	border: 1px solid black;
 	height:100vh;
 	width:100vw;
 }
