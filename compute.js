@@ -58,7 +58,7 @@ class Planet
 }
 function gravity(rocket, relativeGravity)
 {
-	console.log(rocket.currMass);
+	//console.log(rocket.currMass);
 	return rocket.currMass * 9.81 * relativeGravity;
 }
 function airResistance(rocket)
@@ -91,12 +91,18 @@ function main()
 	rocket.addStage(7607, 421300, 25600, 162, 0.25);
 	rocket.addStage(934, 96570, 3900, 397, 0.25);
 	var planet = new Planet(465.1, 5.972e24, 6371e3, 3.986e14);
-	findOrbitHeight(rocket, planet)
+	canvasScale = (canvas.height * 0.3) / planet.radius;
+	console.log(canvasScale);
+	findOrbitHeight(rocket, planet);
 }
 function findOrbitHeight(rocket, planet)
 {
 	var orbit = new Orbit(70000,0,0);
-	//stableOrbit(orbit, rocket, planet, 100);
+	ctx.beginPath();
+	ctx.moveTo(canvas.width*0.5, canvas.height*0.2)
+	stableOrbit(orbit, rocket, planet, 100);
+	ctx.closePath();
+	ctx.stroke();
 }
 function stableOrbit(orbit, rocket, planet, frequencyOfCalc)
 {
@@ -142,6 +148,10 @@ function stableOrbit(orbit, rocket, planet, frequencyOfCalc)
 			var hAcceleration = resultantSideways / rocket.currMass;
 			rocket.vVelocity += vAcceleration / frequencyOfCalc;
 			rocket.hVelocity += hAcceleration / frequencyOfCalc;
+			if(i % 20 == 0)
+			{
+				draw(rocket, frequencyOfCalc/20)
+			}
 		}
 	}
 	console.log("Done");
@@ -154,5 +164,5 @@ function stableOrbit(orbit, rocket, planet, frequencyOfCalc)
 
 
 
-
+var canvasScale;
 main();
