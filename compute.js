@@ -85,12 +85,11 @@ function airResistance(rocket)
 }
 function main()
 {
-	console.log("Stuff");
 	var rocket = new Rocket();
 	console.log(rocket.rotation	);
 	rocket.addStage(7607, 421300, 25600, 162, 0.25);
 	rocket.addStage(934, 96570, 3900, 397, 0.25);
-	var planet = new Planet(465.1, 5.972e24, 6371e3, 3.986e14);
+	var planet = new Planet(465.1, 5.972e24, 6371e3, 9.81, 3.986e14);
 	canvasScale = (canvas.height * 0.3) / planet.radius;
 	console.log(canvasScale);
 	findOrbitHeight(rocket, planet);
@@ -99,10 +98,13 @@ function findOrbitHeight(rocket, planet)
 {
 	var orbit = new Orbit(70000,0,0);
 	ctx.beginPath();
-	ctx.moveTo(canvas.width*0.5, canvas.height*0.2)
+	console.log("started path");
+	ctx.moveTo(0, 0);
 	stableOrbit(orbit, rocket, planet, 100);
 	ctx.closePath();
+	console.log("drawn");
 	ctx.stroke();
+	console.log("filled");
 }
 function stableOrbit(orbit, rocket, planet, frequencyOfCalc)
 {
@@ -131,13 +133,22 @@ function stableOrbit(orbit, rocket, planet, frequencyOfCalc)
 			var impulsePerSecond = requiredImpulse * frequencyOfCalc / remainingBurnTime;
 			//Again I don't think this term is quite right
 			var idealVelocity = orbit.findIdealVelocity(rocket.height, planet);
-			var requiredHorizontalImpulse = (idealVelocity - rocket.hVelocity) * rocket.currMass;
+			var finalIdealVelocity = orbit.findIdealVelocity(orbit.apogee, planet);
+			var requiredHorizontalImpulse = (finalIdealVelocity - rocket.hVelocity) * rocket.currMass;
 			var theta;
 			var relativeGravity = 1 - (rocket.hVelocity / idealVelocity)
 
-			theta = requiredImpulse / requiredHorizontalImpulse;
+			theta = Math.atan(requiredImpulse / requiredHorizontalImpulse); //need to account for gravity
 
 			//Calculate theta here based on parameters
+			if(rocket.height<10000)
+			{
+				rocket.rotation = 0;
+			}
+			else
+			{
+				rocket.rotation = theta;
+			}
 			airResistance(rocket);
 			//console.log(idealVelocity);
 			//console.log(Math.cos(rocket.rotation) * rocket.thrust[0] * 1000 - gravity(rocket, relativeGravity));
@@ -148,11 +159,13 @@ function stableOrbit(orbit, rocket, planet, frequencyOfCalc)
 			var hAcceleration = resultantSideways / rocket.currMass;
 			rocket.vVelocity += vAcceleration / frequencyOfCalc;
 			rocket.hVelocity += hAcceleration / frequencyOfCalc;
+			rocket.height += rocket.vVelocity /frequencyOfCalc;
 			if(i % 20 == 0)
 			{
-				draw(rocket, frequencyOfCalc/20)
+				draw(rocket, frequencyOfCalc/300)
 			}
 		}
+		console.log("Staging");
 	}
 	console.log("Done");
 
