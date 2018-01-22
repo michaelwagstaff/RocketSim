@@ -27,7 +27,7 @@ function draw(rocket, frequencyOfCalc)
 {
 	var hDistance = rocket.hVelocity/frequencyOfCalc;
 	var vDistance = rocket.vVelocity/frequencyOfCalc;
-	var newHPosition = hDistance * canvasScale + lastHPosition;
+	var newHPosition = hDistance * canvasScale * 0.4 + lastHPosition;
 	var newVPosition = vDistance * canvasScale + lastVPosition;
 	ctx.lineTo(newHPosition, newVPosition);
 	lastHPosition = newHPosition;
