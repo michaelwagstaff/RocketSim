@@ -8,18 +8,22 @@
 	<canvas id = "canvas" width = "" height = "" >
 		<h1>Your browser does not support canvas elements</h1>
 	</canvas>
+
+
+	<form class = "newStage">
+		<label>Thrust</label>
+		<input class = "thrust">
+		<label>Initial Mass</label>
+		<input class = "initialMass">
+		<label>Final Mass</label>
+		<input class = "finalMass">
+		<label>Burn Time</label>
+		<input class = "burnTime">
+		<label>Drag co-efficient</label>
+		<input class = "drag">
+		<button id = "addStage">Add Stage</button>
+	</form>
 	<script src = "draw.js"></script>
 	<script src = "compute.js"></script>
-
-	<form>
-		<label>Thrust</label>
-		<input>
-		<label>Initial Mass</label>
-		<input>
-		<label>Final Mass</label>
-		<input>
-		<label>Drag co-efficient</label>
-		<input>
-		<button>Add Stage</button>
-	</form>
+	<script src = "interactive.js"></script>
 </body>

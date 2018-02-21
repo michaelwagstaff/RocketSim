@@ -83,12 +83,13 @@ function airResistance(rocket)
 	airResistanceArray.push(Math.cos(rocket.rotation) * airResistance);
 	airResistanceArray.push(Math.sin(rocket.rotation) * airResistance);
 }
-function main()
+function main(t,mi,mf,bt,cd)
 {
 	var rocket = new Rocket();
 	console.log(rocket.rotation	);
-	rocket.addStage(7607, 421300, 25600, 162, 0.25);
-	rocket.addStage(934, 96570, 3900, 397, 0.25);
+	rocket.addStage(t,mi,mf,bt,cd);
+	//rocket.addStage(7607, 421300, 25600, 162, 0.25);
+	//rocket.addStage(934, 96570, 3900, 397, 0.25);
 	var planet = new Planet(465.1, 5.972e24, 6371e3, 9.81, 3.986e14);
 	canvasScale = (canvas.height * 0.3) / planet.radius;
 	console.log(canvasScale);
@@ -210,4 +211,4 @@ function stableOrbit(orbit, rocket, planet, frequencyOfCalc)
 
 
 var canvasScale;
-main();
+//main();
