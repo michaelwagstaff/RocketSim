@@ -43,16 +43,6 @@ class Rocket
 		this.burnTime.push(burnTime);
 		this.coefficientOfDrag.push(coefficientOfDrag);
 	}
-	seperateStage()
-	{
-		this.totalMass -= this.massInitial[0];
-		this.currMass = this.totalMass;
-		this.thrust.splice(0,1);
-		this.massInitial.splice(0,1);
-		this.massFinal.splice(0,1);
-		this.burnTime.splice(0,1);
-		this.coefficientOfDrag.splice(0,1);
-	}
 }
 class Planet
 {
@@ -97,7 +87,6 @@ function main()
 {
 	var rocket = new Rocket();
 	console.log(rocket.rotation	);
-	rocket.payloadMass = 5000;
 	rocket.addStage(7607, 421300, 25600, 162, 0.25);
 	rocket.addStage(934, 96570, 3900, 397, 0.25);
 	var planet = new Planet(465.1, 5.972e24, 6371e3, 9.81, 3.986e14);
@@ -112,14 +101,10 @@ function findOrbitHeight(rocket, planet)
 	console.log("started path");
 	ctx.moveTo(0, 0);
 	stableOrbit(orbit, rocket, planet, 100);
-	ctx.moveTo(500, -100000)
 	ctx.closePath();
 	console.log("drawn");
 	ctx.stroke();
 	console.log("filled");
-}
-function validAngle(v) {
-	return (Math.min(Math.PI/2, Math.max(0, v)));
 }
 function stableOrbit(orbit, rocket, planet, frequencyOfCalc)
 {
@@ -152,8 +137,26 @@ function stableOrbit(orbit, rocket, planet, frequencyOfCalc)
 			var requiredHorizontalImpulse = (finalIdealVelocity - rocket.hVelocity) * rocket.currMass;
 			var theta;
 			var relativeGravity = 1 - (rocket.hVelocity / idealVelocity)
-			var gravityToCounteract = relativeGravity * planet.g * rocket.currMass * remainingBurnTime / frequencyOfCalc;
-			theta = Math.atan((requiredImpulse + gravityToCounteract) / requiredHorizontalImpulse); //need to account for gravity
+
+			theta = Math.PI/2 - Math.atan(relativeGravity * planet.g * rocket.currMass * (remainingBurnTime/frequencyOfCalc) / requiredHorizontalImpulse); //need to account for gravity
+			//console.log(relativeGravity * planet.g * rocket.currMass * (remainingBurnTime/frequencyOfCalc));
+			if(theta<0)
+			{
+				theta = 0;
+			}
+			else if(theta>Math.PI/2)
+			{
+				theta = Math.PI;
+			}
+			if(rocket.height > orbit.apogee && rocket.vVelocity >= 0)
+			{
+				theta = Math.PI / 2;
+				if(relativeGravity < 0)
+				{
+					theta = 0;
+				}
+			}
+			//console.log(theta);
 			//Calculate theta here based on parameters
 			if(rocket.height<10000)
 			{
@@ -176,15 +179,28 @@ function stableOrbit(orbit, rocket, planet, frequencyOfCalc)
 			rocket.height += rocket.vVelocity /frequencyOfCalc;
 			if(i % 20 == 0)
 			{
+				//console.log(rocket.height);
 				draw(rocket, frequencyOfCalc/300);
-				console.log("current mass" + rocket.currMass);
 			}
 		}
-		rocket.seperateStage();
-
+		console.log("Staging");
 	}
 	console.log("Done");
+	console.log(rocket.height);
+	for(var i = 0; i <=100000;i++)
+	{
+		var resultantUp = 0 - gravity(rocket, relativeGravity);
+		var vAcceleration = resultantUp / rocket.currMass;
+		rocket.vVelocity += vAcceleration / frequencyOfCalc;
+		rocket.height += rocket.vVelocity /frequencyOfCalc;
+		if(i % 20 == 0)
+		{
+			//console.log(rocket.height);
+			draw(rocket, frequencyOfCalc/300);
+		}
 
+	}
+	console.log(rocket.height);
 }
 
 
