@@ -12,3 +12,14 @@ canvas
 	height:100vh;
 	width:100vw;
 }
+form
+{
+	position:fixed;
+	bottom:0;
+	height:5em;
+}
+label
+{
+	color:#fff;
+	margin-left:1em;
+}
