@@ -12,6 +12,12 @@ canvas
 	height:100vh;
 	width:100vw;
 }
+#save
+{
+	position:fixed;
+	top:0.5em;
+	right:0.3em;
+}
 form
 {
 	position:fixed;
