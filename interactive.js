@@ -1,7 +1,7 @@
 var addStage = function(e)
 {
 	e.preventDefault();
-	var stages = getAllStageValues();
+	var rocket = getStageValues();
 	$(".formContainer").append(formElement);
 	formCount+=1;
 	addStageButton = document.querySelectorAll(".addStage")[formCount];
@@ -12,8 +12,8 @@ var addStage = function(e)
 var saveStage = function(e)
 {
 	e.preventDefault();
-	var stages = getAllStageValues();
-	var data = JSON.stringify(stages);
+	var rocket = getAllStageValues();
+	var data = JSON.stringify(rocket);
 	sendRequest("./api/create.php", data);
 }
 var getStageValues = function()
@@ -30,26 +30,23 @@ var getStageValues = function()
 var getAllStageValues = function()
 {
 	var stageInputs = document.getElementsByClassName("stage");
-	var stages = {};
+	var rocket = {};
+	rocket["Name"] = document.getElementById("rocketName").innerHTML;
 	var stageNum = 1;
 	var stageName;
 	for(var stage of stageInputs)
 	{
 		stageName = "Stage " + stageNum;
-		if(stageName == "Stage 2")
-		{
-			console.log("actually starts second stage");
-		}
-		stages[stageName] = {};
-		stages[stageName]["thrust"] = stage[0].value;
-		stages[stageName]["massIntial"] = stage[1].value;
-		stages[stageName]["massFinal"] = stage[2].value;
-		stages[stageName]["burnTime"] = stage[3].value;
-		stages[stageName]["drag"] = stage[4].value;
+		rocket[stageName] = {};
+		rocket[stageName]["thrust"] = stage[0].value;
+		rocket[stageName]["massIntial"] = stage[1].value;
+		rocket[stageName]["massFinal"] = stage[2].value;
+		rocket[stageName]["burnTime"] = stage[3].value;
+		rocket[stageName]["drag"] = stage[4].value;
 		stageNum++;
 	}
-	console.log(stages);
-	return stages;
+	console.log(rocket);
+	return rocket;
 }
 var formCount = 0;
 var addStageButton = document.querySelectorAll(".addStage")[0];

@@ -7,22 +7,42 @@ body
 	max-height: 100vh;
 	overflow: hidden;
 }
-canvas
+nav
 {
-	height:100vh;
+	background-color: #000;
+	height:4em;
 	width:100vw;
+	position:fixed;
+	top:0;
+	left:0;
 }
-#save
+h1
+{
+	margin:0;
+	display: inline-block;
+	color:#fff;
+	line-height: 4rem;
+	font-size: 2rem;
+	
+}
+#saveButton
 {
 	position:fixed;
 	top:0.5em;
 	right:0.3em;
 }
+canvas
+{
+	height:100vh;
+	width:100vw;
+}
 .formContainer
 {
 	position:fixed;
 	bottom:0;
-	height:auto;
+	height:7em;
+	overflow-y: auto;
+	width:100vw;
 }
 label
 {
