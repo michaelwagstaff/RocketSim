@@ -6,6 +6,7 @@ body
 	max-width: 100vw;
 	max-height: 100vh;
 	overflow: hidden;
+	line-height:1.5;
 }
 nav
 {
@@ -19,17 +20,25 @@ nav
 h1
 {
 	margin:0;
+	margin-left:2rem;
 	display: inline-block;
 	color:#fff;
-	line-height: 4rem;
+	line-height: 2.4rem;
+	margin-top: 0.8rem;
 	font-size: 2rem;
-	
+	border-bottom: 3px solid #aaa;
+}
+[contenteditable=true]:empty:before {
+  content: attr(placeholder);
+  color:#ccc;
+  display: inline-block; /* For Firefox */
 }
 #saveButton
 {
 	position:fixed;
-	top:0.5em;
-	right:0.3em;
+	height:2rem;
+	top: 1rem;
+	right: 1rem;
 }
 canvas
 {
@@ -40,7 +49,8 @@ canvas
 {
 	position:fixed;
 	bottom:0;
-	height:7em;
+	height:auto;
+	max-height:7em;
 	overflow-y: auto;
 	width:100vw;
 }
