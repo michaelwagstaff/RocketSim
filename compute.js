@@ -85,6 +85,7 @@ function airResistance(rocket)
 }
 function main(rocketInput)
 {
+	//ctx.clearRect(0, 0, canvas.width, canvas.height);
 	var rocket = new Rocket();
 	var num = Object.keys(rocketInput).length-1;
 	var r = rocketInput;
@@ -104,9 +105,10 @@ function main(rocketInput)
 function findOrbitHeight(rocket, planet)
 {
 	var orbit = new Orbit(70000,0,0);
-	ctx.beginPath();
+	
 	console.log("started path");
-	ctx.moveTo(0, 0);
+	ctx.moveTo(canvas.width*0.5, -canvas.height*0.2);
+	ctx.beginPath();
 	stableOrbit(orbit, rocket, planet, 100);
 	ctx.closePath();
 	console.log("drawn");

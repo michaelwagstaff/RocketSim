@@ -12,8 +12,8 @@ ctx.arc(canvas.width * 0.5, canvas.height * 0.5, canvas.height * 0.3, 0,Math.PI 
 ctx.fill();
 ctx.closePath();
 console.log("Can Draw");
-var lastHPosition = 0;
-var lastVPosition = 0;
+var lastHPosition = canvas.width*0.5;
+var lastVPosition = canvas.height*0.2;
 
 
 function dumpData(h, v)
@@ -28,7 +28,7 @@ function draw(rocket, frequencyOfCalc)
 	var hDistance = rocket.hVelocity/frequencyOfCalc;
 	var vDistance = rocket.vVelocity/frequencyOfCalc;
 	var newHPosition = hDistance * canvasScale * 0.4 + lastHPosition;
-	var newVPosition = vDistance * canvasScale + lastVPosition;
+	var newVPosition = -vDistance * canvasScale + lastVPosition;
 	ctx.lineTo(newHPosition, newVPosition);
 	lastHPosition = newHPosition;
 	lastVPosition = newVPosition;
