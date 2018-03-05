@@ -83,11 +83,17 @@ function airResistance(rocket)
 	airResistanceArray.push(Math.cos(rocket.rotation) * airResistance);
 	airResistanceArray.push(Math.sin(rocket.rotation) * airResistance);
 }
-function main(t,mi,mf,bt,cd)
+function main(rocketInput)
 {
 	var rocket = new Rocket();
-	console.log(rocket.rotation	);
-	rocket.addStage(t,mi,mf,bt,cd);
+	var num = Object.keys(rocketInput).length-1;
+	var r = rocketInput;
+	for(var i = 1; i<=num;i++)
+	{
+		var s = "Stage " + i;
+		console.log(r[s]["massInitial"]);
+		rocket.addStage(r[s]["thrust"], r[s]["massInitial"], r[s]["massFinal"], r[s]["burnTime"], r[s]["drag"]);
+	}
 	//rocket.addStage(7607, 421300, 25600, 162, 0.25);
 	//rocket.addStage(934, 96570, 3900, 397, 0.25);
 	var planet = new Planet(465.1, 5.972e24, 6371e3, 9.81, 3.986e14);
