@@ -1,14 +1,15 @@
 <!DOCTYPE html>
 <head>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> 
-	<link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css" integrity="sha384-nn4HPE8lTHyVtfCBi5yW9d20FjT8BJwUXyWZT9InLYax14RDjBj46LmSztkmNP9w" crossorigin="anonymous">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 	<link rel = "stylesheet" href = "normalize.css">
 	<link rel = "stylesheet" href = "main.css">
+	<meta name="google-signin-client_id" content="148553179499-8ccg2aufhoeb0boot8qda7ii31ofilgd.apps.googleusercontent.com">
 </head>
 <body>
 	<nav>
 		<!--Insert Logo Here-->
 		<h1  id = "rocketName" placeholder = "Enter Rocket Name" contenteditable = "true"></h1>
+		<div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div>
 		<button id = "saveButton">Save Rocket</button>
 	</nav>
 	<canvas id = "canvas" width = "" height = "" >
@@ -33,4 +34,6 @@
 	<script src = "draw.js"></script>
 	<script src = "compute.js"></script>
 	<script src = "interactive.js"></script>
+	<script src="https://apis.google.com/js/platform.js" async defer></script>
+
 </body>
