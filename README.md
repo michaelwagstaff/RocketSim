@@ -11,5 +11,5 @@ For testing UI design the simulaion data is disabled. To enable this uncomment t
 
 - Make backend DB interaction work
 - Create a trajectory line the curves round the Earth
-- Use Google's OAuth service for authentication
+- Use google's backend API
 - Improve the physics simulation accuracy

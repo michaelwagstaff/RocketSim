@@ -13,6 +13,7 @@ var saveStage = function(e)
 {
 	e.preventDefault();
 	var rocket = getAllStageValues();
+	rocket["userID"] = userID;
 	var data = JSON.stringify(rocket);
 	sendRequest("./api/create.php", data);
 }
@@ -63,6 +64,8 @@ var sendRequest = function(url,data)
 function onSignIn(googleUser)
 {
 	var profile = googleUser.getBasicProfile();
+	$("#saveButton").removeClass("hiddenSave");
+	$(".g-signin2").addClass("hiddenSave");
 	userID = profile.getId(); // Do not send to your backend! Use an ID token instead.
 	//For now I will send this to the backend. I'm storing rocket configs not credit card details.
 }
