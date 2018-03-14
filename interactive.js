@@ -45,7 +45,9 @@ var saveButton = document.querySelectorAll("#saveButton")[0];
 saveButton.addEventListener("click",saveStage);
 
 var formElement = '<form class = "stage"><label>Thrust</label><input class = "thrust"><label>Initial Mass</label><input class = "initialMass"><label>Final Mass</label><input class = "finalMass"><label>Burn Time</label><input class = "burnTime"><label>Drag co-efficient</label><input class = "drag"><button class = "addStage">Add Stage</button></form>';
-console.log(formElement);
+
+var userID;
+
 var sendRequest = function(url,data)
 {
 	var xhr = new XMLHttpRequest();
@@ -57,4 +59,10 @@ var sendRequest = function(url,data)
 	}
 	xhr.open("POST", url, true);
 	xhr.send(data);
+}
+function onSignIn(googleUser)
+{
+	var profile = googleUser.getBasicProfile();
+	userID = profile.getId(); // Do not send to your backend! Use an ID token instead.
+	//For now I will send this to the backend. I'm storing rocket configs not credit card details.
 }

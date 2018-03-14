@@ -33,12 +33,16 @@ h1
   color:#ccc;
   display: inline-block; /* For Firefox */
 }
-#saveButton
+.saveButtonLocation
 {
 	position:fixed;
 	height:2rem;
 	top: 1rem;
 	right: 1rem;
+}
+.hiddenSave
+{
+	display:none;
 }
 canvas
 {
