@@ -12,7 +12,7 @@ ctx.arc(canvas.width * 0.5, canvas.height * 0.5, canvas.height * 0.3, 0,Math.PI 
 ctx.fill();
 ctx.closePath();
 console.log("Can Draw");
-var lastHPosition;
+var originalHPosition;
 var lastVPosition;
 
 
@@ -25,14 +25,14 @@ function dumpData(h, v)
 
 function draw(rocket, frequencyOfCalc, planet)
 {
+	//NEED TO TRANSLATE FOR ROTATION TO WORK PROPERLY
 	var hDistance = rocket.hVelocity/frequencyOfCalc;
 	var vDistance = rocket.vVelocity/frequencyOfCalc;
-	var newHPosition = hDistance * canvasScale + lastHPosition;
 	var newVPosition = -vDistance * canvasScale + lastVPosition;
-	ctx.lineTo(newHPosition, newVPosition);
+	ctx.lineTo(originalHPosition, newVPosition);
 	var circumference = (rocket.height + planet["radius"]) * Math.PI * 2;
-	ctx.rotate((hDistance/circumference)/(Math.PI)*2);
-	lastHPosition = newHPosition;
+	//console.log(rocket.vVelocity);
+	ctx.rotate((hDistance/circumference)*(Math.PI)*2);
 	lastVPosition = newVPosition;
 	//dumpData(newHPosition, newVPosition);
 }
@@ -40,16 +40,18 @@ function reset()
 {
 	ctx.setTransform(1, 0, 0, 1, 0, 0);
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
+	ctx.translate(canvas.width*0.5, canvas.height * 0.5);
 	ctx.fillStyle = 'rgb(73, 188, 92)';
 	ctx.strokeStyle = 'rgb(255, 255, 255)';
 	//ctx.fillRect(0,0,canvas.width,canvas.height);
 	ctx.beginPath();
-	ctx.arc(canvas.width * 0.5, canvas.height * 0.5, canvas.height * 0.3, 0,Math.PI * 2);
+	ctx.arc(0, 0, canvas.height * 0.3, 0,Math.PI * 2);
 	ctx.fill();
 	ctx.closePath();
+
 	console.log("Can Draw");
-	lastHPosition = canvas.width*0.5;
-	lastVPosition = canvas.height*0.2;
+	originalHPosition = canvas.width*0;
+	lastVPosition = canvas.height*-0.3;
 }
 reset();
 

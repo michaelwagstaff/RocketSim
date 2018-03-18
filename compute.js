@@ -190,14 +190,15 @@ function stableOrbit(orbit, rocket, planet, frequencyOfCalc)
 			if(i % 20 == 0)
 			{
 				//console.log(rocket.height);
-				draw(rocket, frequencyOfCalc/300,planet);
+				draw(rocket, frequencyOfCalc/20,planet);
 			}
 		}
 		console.log("Staging");
 	}
 	console.log("Done");
 	console.log(rocket.height);
-	for(var i = 0; i <=100000;i++)
+	
+	for(var i = 0; i <=1000000;i++)
 	{
 		var resultantUp = 0 - gravity(rocket, relativeGravity);
 		var vAcceleration = resultantUp / rocket.currMass;
@@ -206,10 +207,11 @@ function stableOrbit(orbit, rocket, planet, frequencyOfCalc)
 		if(i % 20 == 0)
 		{
 			//console.log(rocket.height);
-			draw(rocket, frequencyOfCalc/300, planet);
+			draw(rocket, frequencyOfCalc/20, planet);
 		}
 
 	}
+	
 	console.log(rocket.height);
 }
 
