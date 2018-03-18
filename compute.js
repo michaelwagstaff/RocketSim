@@ -215,7 +215,11 @@ function stableOrbit(orbit, rocket, planet, frequencyOfCalc)
 	console.log(rocket.height);
 }
 
-
+function continueDrawing(rocket)
+{
+	var gpe = rocket.height * 9.8 * rocket.totalMass;
+	var ke = 0.5 * rocket.totalMass
+}
 
 
 
