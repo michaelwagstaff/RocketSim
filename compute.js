@@ -85,7 +85,7 @@ function airResistance(rocket)
 }
 function main(rocketInput)
 {
-	//ctx.clearRect(0, 0, canvas.width, canvas.height);
+	reset();
 	var rocket = new Rocket();
 	var num = Object.keys(rocketInput).length-1;
 	var r = rocketInput;
@@ -98,6 +98,7 @@ function main(rocketInput)
 	//rocket.addStage(7607, 421300, 25600, 162, 0.25);
 	//rocket.addStage(934, 96570, 3900, 397, 0.25);
 	var planet = new Planet(465.1, 5.972e24, 6371e3, 9.81, 3.986e14);
+	console.log(planet["radius"]);
 	canvasScale = (canvas.height * 0.3) / planet.radius;
 	console.log(canvasScale);
 	findOrbitHeight(rocket, planet);
@@ -189,7 +190,7 @@ function stableOrbit(orbit, rocket, planet, frequencyOfCalc)
 			if(i % 20 == 0)
 			{
 				//console.log(rocket.height);
-				draw(rocket, frequencyOfCalc/300);
+				draw(rocket, frequencyOfCalc/300,planet);
 			}
 		}
 		console.log("Staging");
@@ -205,7 +206,7 @@ function stableOrbit(orbit, rocket, planet, frequencyOfCalc)
 		if(i % 20 == 0)
 		{
 			//console.log(rocket.height);
-			draw(rocket, frequencyOfCalc/300);
+			draw(rocket, frequencyOfCalc/300, planet);
 		}
 
 	}
