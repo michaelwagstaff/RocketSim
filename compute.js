@@ -1,3 +1,5 @@
+var falcon9 = JSON.parse('{"Name":"Falcon 9","Stage 1":{"thrust":7607,"massInitial":421300,"massFinal":25600,"burnTime":162,"drag":0.25},"Stage 2":{"thrust":934,"massInitial":96570,"massFinal":3900,"burnTime":397,"drag":0.25}}');
+console.log(falcon9);
 class Orbit
 {
 	constructor(apogee, period,idealVelocity)
@@ -108,13 +110,29 @@ function findOrbitHeight(rocket, planet)
 	var orbit = new Orbit(70000,0,0);
 	
 	console.log("started path");
-	ctx.moveTo(canvas.width*0.5, -canvas.height*0.2);
-	ctx.beginPath();
-	stableOrbit(orbit, rocket, planet, 100);
-	ctx.closePath();
-	console.log("drawn");
-	ctx.stroke();
-	console.log("filled");
+	for(var i = 0;i<1;i++)
+	{
+		reset();
+		ctx.moveTo(canvas.width*0.5, -canvas.height*0.2);
+		ctx.beginPath();
+		var height = stableOrbit(orbit, rocket, planet, 100);
+		orbit["apogee"] = height;
+		
+		ctx.closePath();
+		console.log("drawn");
+		ctx.stroke();
+		console.log("filled");
+		console.log("apogee: " + orbit["apogee"]);
+	}
+	orbit["apogee"] = originalHeight;
+
+	/*
+	
+	console.log("apogee: " + orbit["apogee"]);
+	reset();
+	height = stableOrbit(orbit, rocket, planet, 100);
+	*/
+	
 }
 function stableOrbit(orbit, rocket, planet, frequencyOfCalc)
 {
@@ -197,7 +215,7 @@ function stableOrbit(orbit, rocket, planet, frequencyOfCalc)
 	}
 	console.log("Done");
 	console.log(rocket.height);
-	
+	/*
 	for(var i = 0; i <=1000000;i++)
 	{
 		var resultantUp = 0 - gravity(rocket, relativeGravity);
@@ -211,8 +229,10 @@ function stableOrbit(orbit, rocket, planet, frequencyOfCalc)
 		}
 
 	}
+	*/
 	
 	console.log(rocket.height);
+	return rocket.height;
 }
 
 function continueDrawing(rocket)
@@ -227,3 +247,4 @@ function continueDrawing(rocket)
 
 var canvasScale;
 //main();
+var originalHeight = 70000;
