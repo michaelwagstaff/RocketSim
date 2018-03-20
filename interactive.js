@@ -66,6 +66,5 @@ function onSignIn(googleUser)
 	var profile = googleUser.getBasicProfile();
 	$("#saveButton").removeClass("hiddenSave");
 	$(".g-signin2").addClass("hiddenSave");
-	userID = profile.getId(); // Do not send to your backend! Use an ID token instead.
-	//For now I will send this to the backend. I'm storing rocket configs not credit card details.
+	userID = googleUser.getAuthResponse().id_token; // Do not send to your backend! Use an ID token instead.
 }
