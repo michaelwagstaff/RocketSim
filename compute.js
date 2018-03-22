@@ -1,5 +1,6 @@
 var falcon9 = JSON.parse('{"Name":"Falcon 9","Stage 1":{"thrust":7607,"massInitial":421300,"massFinal":25600,"burnTime":162,"drag":0.25},"Stage 2":{"thrust":934,"massInitial":96570,"massFinal":3900,"burnTime":397,"drag":0.25}}');
 console.log(falcon9);
+var G = 6.67408E-11;
 class Orbit
 {
 	constructor(apogee, period,idealVelocity)
@@ -58,10 +59,10 @@ class Planet
 
 	}
 }
-function gravity(rocket, relativeGravity)
+function gravity(rocket, planet, relativeGravity)
 {
-	//console.log(rocket.currMass);
-	return rocket.currMass * 9.81 * relativeGravity;
+	//console.log(rocket.currMass);s
+	return G * rocket.currMass * planet.mass * relativeGravity / Math.pow((planet.radius + rocket.height),2);
 }
 function airResistance(rocket)
 {
@@ -125,7 +126,7 @@ function findOrbitHeight(rocket, planet)
 		console.log("apogee: " + orbit["apogee"]);
 	}
 	orbit["apogee"] = originalHeight;
-
+	continueDrawing(rocket,planet);
 	/*
 	
 	console.log("apogee: " + orbit["apogee"]);
@@ -197,7 +198,7 @@ function stableOrbit(orbit, rocket, planet, frequencyOfCalc)
 			airResistance(rocket);
 			//console.log(idealVelocity);
 			//console.log(Math.cos(rocket.rotation) * rocket.thrust[0] * 1000 - gravity(rocket, relativeGravity));
-			var resultantUp = (Math.cos(rocket.rotation) * rocket.thrust[0] * 1000) - gravity(rocket, relativeGravity);
+			var resultantUp = (Math.cos(rocket.rotation) * rocket.thrust[0] * 1000) - gravity(rocket, planet,  relativeGravity);
 			var resultantSideways = (Math.sin(rocket.rotation) * rocket.thrust[0] * 1000);
 			rocket.currMass -= (rocket.massInitial[0] - rocket.massFinal[0]) / (rocket.burnTime[0] * frequencyOfCalc);
 			var vAcceleration = resultantUp / rocket.currMass;
@@ -218,7 +219,7 @@ function stableOrbit(orbit, rocket, planet, frequencyOfCalc)
 	/*
 	for(var i = 0; i <=1000000;i++)
 	{
-		var resultantUp = 0 - gravity(rocket, relativeGravity);
+		var resultantUp = 0 - gravity(rocket, planet, relativeGravity);
 		var vAcceleration = resultantUp / rocket.currMass;
 		rocket.vVelocity += vAcceleration / frequencyOfCalc;
 		rocket.height += rocket.vVelocity /frequencyOfCalc;
@@ -235,10 +236,16 @@ function stableOrbit(orbit, rocket, planet, frequencyOfCalc)
 	return rocket.height;
 }
 
-function continueDrawing(rocket)
+function continueDrawing(rocket,planet)
 {
+	/*
 	var gpe = rocket.height * 9.8 * rocket.totalMass;
-	var ke = 0.5 * rocket.totalMass
+	var ke = 0.5 * rocket.totalMass;
+	*/
+	ctx.moveTo(canvas.width*0.5, canvas.height * -0.5);
+	ctx.beginPath();
+	ctx.arc(0, 0, canvas.height * 0.3 + canvasScale * rocket.height, 0,Math.PI * 2);
+	ctx.stroke();
 }
 
 

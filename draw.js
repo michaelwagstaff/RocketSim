@@ -25,7 +25,6 @@ function dumpData(h, v)
 
 function draw(rocket, frequencyOfCalc, planet)
 {
-	//NEED TO TRANSLATE FOR ROTATION TO WORK PROPERLY
 	var hDistance = rocket.hVelocity/frequencyOfCalc;
 	var vDistance = rocket.vVelocity/frequencyOfCalc;
 	var newVPosition = -vDistance * canvasScale + lastVPosition;
