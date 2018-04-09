@@ -4,7 +4,7 @@ $query = http_build_query([
 		]);
 $ch = curl_init("https://www.googleapis.com/oauth2/v3/tokeninfo?".$query);
 $options = array(
-    CURLOPT_RETURNTRANSFER => false,   // return web page
+    CURLOPT_RETURNTRANSFER => true,   // return web page
     CURLOPT_HEADER         => false,  // don't return headers
     CURLOPT_FOLLOWLOCATION => true,   // follow redirects
     CURLOPT_MAXREDIRS      => 10,     // stop after 10 redirects
@@ -16,14 +16,31 @@ $options = array(
     CURLOPT_SSL_VERIFYPEER => false,
 ); 
 curl_setopt_array($ch, $options);
-curl_exec($ch);
+$payload = curl_exec($ch);
+$http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 if (!curl_errno($ch)) {
-	if ($http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE)) {
-		echo "200";
+	if ($http_code == 200) {
+        $payload = json_decode($payload);
+        $googleID = $payload->sub;
+		handleUser($payload->sub, $mysqli);
+
 	}
 }
 else
 {
 	echo curl_error($ch);
+}
+function handleUser($id, $mysqli)
+{
+    $result = $mysqli->query("SELECT * FROM 'Users' WHERE UserID = '". $id ."'");
+    if($result->num_rows == 0)
+    {
+        $mysqli->query("INSERT INTO Users VALUES('".$id."','','2018-04-09')");
+    }
+    else
+    {
+
+    }
+    echo $mysqli->error;
 }
 ?>

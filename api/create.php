@@ -1,7 +1,10 @@
 <?php
 $data = json_decode(file_get_contents('php://input'), true);
-//echo file_get_contents('php://input');
-//$mysqli = new mysqli("localhost", "root", "", "rocketsim");
+require "../../password.php";
+$mysqli = new mysqli("localhost", "root", $password, "rocketsim");
+
+require 'auth.php';
+
 $rocket = [];
 $rocket["userID"] = $data["userID"];
 //echo "ID Token: " . $rocket["userID"];
