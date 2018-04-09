@@ -36,7 +36,6 @@ class Rocket
 		this.rotation = 0;
 		this.relativeGravity = 0;
 	}
-
 	addStage(thrust, massInitial, massFinal, burnTime, coefficientOfDrag)
 	{
 		this.thrust.push(thrust);
@@ -62,7 +61,7 @@ class Planet
 }
 function gravity(rocket, planet, relativeGravity)
 {
-	//console.log(rocket.currMass);s
+	//console.log(rocket.currMass);
 	return G * rocket.currMass * planet.mass * relativeGravity / Math.pow((planet.radius + rocket.height),2);
 }
 function airResistance(rocket)
@@ -99,6 +98,7 @@ function main(rocketInput)
 		console.log(r[s]["massInitial"]);
 		rocket.addStage(r[s]["thrust"], r[s]["massInitial"], r[s]["massFinal"], r[s]["burnTime"], r[s]["drag"]);
 	}
+	console.log(rocket);
 	//rocket.addStage(7607, 421300, 25600, 162, 0.25);
 	//rocket.addStage(934, 96570, 3900, 397, 0.25);
 	var planet = new Planet(465.1, 5.972e24, 6371e3, 9.81, 3.986e14);
@@ -119,8 +119,6 @@ function findOrbitHeight(rocket, planet)
 		ctx.beginPath();
 		var height = stableOrbit(orbit, rocket, planet, 100);
 		orbit["apogee"] = height;
-		
-		ctx.closePath();
 		console.log("drawn");
 		ctx.stroke();
 		console.log("filled");
@@ -129,8 +127,13 @@ function findOrbitHeight(rocket, planet)
 	orbit["apogee"] = originalHeight;
 	if(rocket.relativeGravity<=0.01)
 	{
-		continueDrawing(rocket,planet);
+		drawOrbit(rocket,planet);
 	}
+	else
+	{
+		finishArc(rocket,100, planet);
+	}
+	
 	/*
 	
 	console.log("apogee: " + orbit["apogee"]);
@@ -240,15 +243,30 @@ function stableOrbit(orbit, rocket, planet, frequencyOfCalc)
 	return rocket.height;
 }
 
-function continueDrawing(rocket,planet)
+function drawOrbit(rocket,planet)
 {
-	/*
-	var gpe = rocket.height * 9.8 * rocket.totalMass;
-	var ke = 0.5 * rocket.totalMass;
-	*/
 	ctx.moveTo(canvas.width*0.5, canvas.height * -0.5);
 	ctx.beginPath();
 	ctx.arc(0, 0, canvas.height * 0.3 + canvasScale * rocket.height, 0,Math.PI * 2);
+	ctx.stroke();
+}
+function finishArc(rocket, frequencyOfCalc, planet)
+{
+	ctx.beginPath();
+	while(rocket.height>0)
+	{
+
+		var resultantUp = 0 - gravity(rocket, planet, rocket.relativeGravity);
+		var vAcceleration = resultantUp / rocket.currMass;
+		rocket.vVelocity += vAcceleration / frequencyOfCalc;
+		rocket.height += rocket.vVelocity /frequencyOfCalc;
+		if(i % 20 == 0)
+		{
+			//console.log(rocket.height);
+			draw(rocket, frequencyOfCalc/20, planet);
+		}
+		
+	}
 	ctx.stroke();
 }
 
