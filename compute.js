@@ -165,23 +165,24 @@ function stableOrbit(orbit, rocket, planet, frequencyOfCalc)
 		{
 			toApogee = Math.pow(rocket.vVelocity, 2) / 19.6;
 			remainingBurnTime-= 1;
-			//console.log(remainingBurnTime);
-			requiredImpulse = planet.g * rocket.currMass * (orbit.apogee - rocket.height - toApogee) //bad way of modelling this
-			/* Either:
-			- replace requiredImpulse calculation
-			- fix mass term
-			- calculate horizontal inpulse required in a similar way and find proper angle
-			*/
+
+
+			//Use grav field equations
+			requiredImpulse = planet.g * rocket.currMass * (orbit.apogee - rocket.height - toApogee)
+			
+
 			var impulsePerSecond = requiredImpulse * frequencyOfCalc / remainingBurnTime;
-			//Again I don't think this term is quite right
 			var idealVelocity = orbit.findIdealVelocity(rocket.height, planet);
 			var finalIdealVelocity = orbit.findIdealVelocity(orbit.apogee, planet);
 			var requiredHorizontalImpulse = (finalIdealVelocity - rocket.hVelocity) * rocket.currMass;
 			var theta;
 			rocket.relativeGravity = 1 - (rocket.hVelocity / idealVelocity);
 
+
+			//Uses old system of modelling gravity, should update
 			theta = Math.PI/2 - Math.atan(rocket.relativeGravity * planet.g * rocket.currMass * (remainingBurnTime/frequencyOfCalc) / requiredHorizontalImpulse); //need to account for gravity
-			//console.log(rocket.relativeGravity * planet.g * rocket.currMass * (remainingBurnTime/frequencyOfCalc));
+			
+
 			if(theta<0)
 			{
 				theta = 0;
@@ -198,8 +199,6 @@ function stableOrbit(orbit, rocket, planet, frequencyOfCalc)
 					theta = 0;
 				}
 			}
-			//console.log(theta);
-			//Calculate theta here based on parameters
 			if(rocket.height<10000)
 			{
 				rocket.rotation = 0;
@@ -209,42 +208,27 @@ function stableOrbit(orbit, rocket, planet, frequencyOfCalc)
 				rocket.rotation = theta;
 			}
 			airResistance(rocket);
-			//console.log(idealVelocity);
-			//console.log(Math.cos(rocket.rotation) * rocket.thrust[0] * 1000 - gravity(rocket, rocket.relativeGravity));
 			var resultantUp = (Math.cos(rocket.rotation) * rocket.thrust[0] * 1000) - gravity(rocket, planet,  rocket.relativeGravity);
 			var resultantSideways = (Math.sin(rocket.rotation) * rocket.thrust[0] * 1000);
 			rocket.currMass -= (rocket.massInitial[0] - rocket.massFinal[0]) / (rocket.burnTime[0] * frequencyOfCalc);
+			
+
+			//Change this section to accurately use XY co-ordinates from the resultant forces
 			var vAcceleration = resultantUp / rocket.currMass;
 			var hAcceleration = resultantSideways / rocket.currMass;
 			rocket.vVelocity += vAcceleration / frequencyOfCalc;
 			rocket.hVelocity += hAcceleration / frequencyOfCalc;
 			rocket.height += rocket.vVelocity /frequencyOfCalc;
+
+
 			if(i % 20 == 0)
 			{
-				//console.log(rocket.height);
 				draw(rocket, frequencyOfCalc/20,planet);
 			}
 		}
-		console.log("Staging");
+		console.log("Stage Seperation");
 	}
-	console.log("Done");
-	console.log(rocket.height);
-	/*
-	for(var i = 0; i <=1000000;i++)
-	{
-		var resultantUp = 0 - gravity(rocket, planet, rocket.relativeGravity);
-		var vAcceleration = resultantUp / rocket.currMass;
-		rocket.vVelocity += vAcceleration / frequencyOfCalc;
-		rocket.height += rocket.vVelocity /frequencyOfCalc;
-		if(i % 20 == 0)
-		{
-			//console.log(rocket.height);
-			draw(rocket, frequencyOfCalc/20, planet);
-		}
-
-	}
-	*/
-	
+	console.log("Burn Complete");
 	console.log(rocket.height);
 	return rocket.height;
 }
