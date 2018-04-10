@@ -20,7 +20,7 @@ class Orbit
 }
 class Rocket
 {
-	constructor()
+	constructor(planet)
 	{
 		this.thrust = [];
 		this.massInitial = [];
@@ -35,6 +35,12 @@ class Rocket
 		this.payloadMass = 0;
 		this.rotation = 0;
 		this.relativeGravity = 0;
+		this.xPosition = 0;
+		this.yPosition = planet.radius;
+		this.xVelocity = 0;
+		this.yVelocity = 0;
+		this.xAcceleration = 0;
+		this.yAcceleration = 0;
 	}
 	addStage(thrust, massInitial, massFinal, burnTime, coefficientOfDrag)
 	{
@@ -89,7 +95,8 @@ function airResistance(rocket)
 function main(rocketInput)
 {
 	reset();
-	var rocket = new Rocket();
+	var planet = new Planet(465.1, 5.972e24, 6371e3, 9.81, 3.986e14);
+	var rocket = new Rocket(planet);
 	var num = Object.keys(rocketInput).length-1;
 	var r = rocketInput;
 	for(var i = 1; i<=num;i++)
@@ -101,7 +108,6 @@ function main(rocketInput)
 	console.log(rocket);
 	//rocket.addStage(7607, 421300, 25600, 162, 0.25);
 	//rocket.addStage(934, 96570, 3900, 397, 0.25);
-	var planet = new Planet(465.1, 5.972e24, 6371e3, 9.81, 3.986e14);
 	console.log(planet["radius"]);
 	canvasScale = (canvas.height * 0.3) / planet.radius;
 	console.log(canvasScale);
