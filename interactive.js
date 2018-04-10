@@ -66,5 +66,5 @@ function onSignIn(googleUser)
 	var profile = googleUser.getBasicProfile();
 	$("#saveButton").removeClass("hiddenSave");
 	$(".g-signin2").addClass("hiddenSave");
-	userID = googleUser.getAuthResponse().id_token; // Do not send to your backend! Use an ID token instead.
+	userID = googleUser.getAuthResponse().id_token;
 }

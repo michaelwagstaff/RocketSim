@@ -5,22 +5,23 @@ $mysqli = new mysqli("localhost", "root", $password, "rocketsim");
 
 require 'auth.php';
 
-$rocket = [];
-$rocket["userID"] = $data["userID"];
-//echo "ID Token: " . $rocket["userID"];
-$rocket["Name"] = $data["Name"];
-$rocket["RocketID"] = getAlphaNumericID();
+$info = [];
+$info["Name"] = $data["Name"];
+unset($data["Name"]);
+unset($data["userID"]);
+$info["RocketID"] = getAlphaNumericID();
 $date = new DateTime();
-$rocket["DateCreated"] = date('Y-m-d H:i:s',$date->getTimestamp());
-//$mysqli->query("INSERT INTO 'rockets' VALUES('Person', 'hfrughbsk', 'Name', '2018-03-02 10:43:20')");
-//$mysqli->close();
-//$stmt->execute();
+$info["DateCreated"] = date('Y-m-d H:i:s',$date->getTimestamp());
 
-//echo $rocket["DateCreated"];
-foreach($data as $stage)
+
+$mysqli->query("INSERT INTO Rockets VALUES('".$info["RocketID"]."','".$googleID."','".$info["Name"]."','2018-04-09')");
+
+$i = 1;
+foreach($data as $s)
 {
-	/*$thrust = $stage["thrust"];
-	echo $thrust;*/
+	$mysqli->query("INSERT INTO Stages VALUES(".$i.",'".$info["RocketID"]."',".$s["thrust"].",".$s["massInitial"].",".$s["massFinal"].",".$s["burnTime"].",".$s["drag"].")");
+	$i++;
+	echo $info["Name"]." has been saved";
 }
 
 

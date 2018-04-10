@@ -23,7 +23,6 @@ if (!curl_errno($ch)) {
         $payload = json_decode($payload);
         $googleID = $payload->sub;
 		handleUser($payload->sub, $mysqli);
-
 	}
 }
 else
@@ -33,7 +32,7 @@ else
 function handleUser($id, $mysqli)
 {
     $result = $mysqli->query("SELECT * FROM 'Users' WHERE UserID = '". $id ."'");
-    if($result->num_rows == 0)
+    if($result->num_rows == 0) //$result is not an object -- to fix
     {
         $mysqli->query("INSERT INTO Users VALUES('".$id."','','2018-04-09')");
     }
