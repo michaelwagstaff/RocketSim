@@ -27,7 +27,8 @@ if (!curl_errno($ch)) {
 }
 else
 {
-	echo curl_error($ch);
+	echo curl_error($ch); //change for production
+    die();
 }
 function handleUser($id, $mysqli)
 {
