@@ -65,10 +65,10 @@ class Planet
 
 	}
 }
-function gravity(rocket, planet, relativeGravity)
+function gravity(rocket, planet)
 {
 	//console.log(rocket.currMass);
-	return G * rocket.currMass * planet.mass * relativeGravity / Math.pow((planet.radius + rocket.height),2);
+	return G * rocket.currMass * planet.mass * rocket.relativeGravity / Math.pow((planet.radius + rocket.height),2);
 }
 function airResistance(rocket)
 {
@@ -179,8 +179,8 @@ function stableOrbit(orbit, rocket, planet, frequencyOfCalc)
 			rocket.relativeGravity = 1 - (rocket.hVelocity / idealVelocity);
 
 
-			//Uses old system of modelling gravity, should update
-			theta = Math.PI/2 - Math.atan(rocket.relativeGravity * planet.g * rocket.currMass * (remainingBurnTime/frequencyOfCalc) / requiredHorizontalImpulse); //need to account for gravity
+			//Only includes vertical impulse to counter gravity
+			theta = Math.PI/2 - Math.atan(gravity(rocket, planet) * (remainingBurnTime/frequencyOfCalc) / requiredHorizontalImpulse);
 			
 
 			if(theta<0)
@@ -216,9 +216,20 @@ function stableOrbit(orbit, rocket, planet, frequencyOfCalc)
 			//Change this section to accurately use XY co-ordinates from the resultant forces
 			var vAcceleration = resultantUp / rocket.currMass;
 			var hAcceleration = resultantSideways / rocket.currMass;
-			rocket.vVelocity += vAcceleration / frequencyOfCalc;
-			rocket.hVelocity += hAcceleration / frequencyOfCalc;
+
+			rocket.yAcceleration = vAcceleration*Math.cos(canvasRotation) - hAcceleration * Math.sin(canvasRotation);
+			rocket.xAcceleration = vAcceleration*Math.sin(canvasRotation) + hAcceleration * Math.cos(canvasRotation);
+			
+			rocket.xVelocity += rocket.xAcceleration / frequencyOfCalc;
+			rocket.yVelocity += rocket.yAcceleration / frequencyOfCalc;
+
+			rocket.xPosition += rocket.xVelocity / frequencyOfCalc;
+			rocket.yPosition += rocket.xVelocity / frequencyOfCalc;
+
+			rocket.vVelocity = rocket.yVelocity*Math.cos(canvasRotation) + rocket.xVelocity*Math.sin(canvasRotation);
+			rocket.hVelocity = - rocket.yVelocity*Math.sin(canvasRotation) + rocket.xVelocity*Math.cos(canvasRotation);
 			rocket.height += rocket.vVelocity /frequencyOfCalc;
+			//rocket.height = Math.sqrt(Math.pow(rocket.xPosition, 2) + Math.pow(rocket.yPosition, 2)) - planet.radius;
 
 
 			if(i % 20 == 0)
@@ -243,6 +254,7 @@ function drawOrbit(rocket,planet)
 function finishArc(rocket, frequencyOfCalc, planet)
 {
 	ctx.beginPath();
+	
 	while(rocket.height>0)
 	{
 

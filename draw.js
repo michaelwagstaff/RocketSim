@@ -31,6 +31,7 @@ function draw(rocket, frequencyOfCalc, planet)
 	ctx.lineTo(originalHPosition, newVPosition);
 	var circumference = (rocket.height + planet["radius"]) * Math.PI * 2;
 	//console.log(rocket.vVelocity);
+	canvasRotation += (hDistance/circumference)*(Math.PI)*2
 	ctx.rotate((hDistance/circumference)*(Math.PI)*2);
 	lastVPosition = newVPosition;
 	//dumpData(newHPosition, newVPosition);
@@ -51,7 +52,9 @@ function reset()
 	console.log("Can Draw");
 	originalHPosition = canvas.width*0;
 	lastVPosition = canvas.height*-0.3;
+	canvasRotation = 0;
 }
+var canvasRotation = 0;
 reset();
 
 
