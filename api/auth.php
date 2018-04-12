@@ -19,14 +19,20 @@ curl_setopt_array($ch, $options);
 $payload = curl_exec($ch);
 $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 if (!curl_errno($ch)) {
-	if ($http_code == 200) {
+    if ($http_code == 200) {
         $payload = json_decode($payload);
         $googleID = $payload->sub;
-		handleUser($payload->sub, $mysqli);
+		handleUser($googleID, $mysqli);
 	}
+    else
+    {
+        echo $http_code;
+        echo curl_error($ch);
+    }
 }
 else
 {
+    echo $http_code;
 	echo curl_error($ch); //change for production
     die();
 }

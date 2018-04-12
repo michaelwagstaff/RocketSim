@@ -15,7 +15,7 @@ var saveStage = function(e)
 	var rocket = getAllStageValues();
 	rocket["userID"] = userID;
 	var data = JSON.stringify(rocket);
-	sendRequest("./api/create.php", data);
+	sendRequest("./api/create.php", data, "POST");
 }
 var getAllStageValues = function()
 {
@@ -40,10 +40,13 @@ var getAllStageValues = function()
 }
 var loadStage = function()
 {
-	if(userID != "")
+	//console.log(userID);
+	if(userID !== "")
 	{
+		var temp = {};
+		temp["userID"] = userID;
 		var data = JSON.stringify(userID);
-		sendRequest("./api/read.php",data);
+		console.log(sendRequest("./api/read.php",data, "GET"));
 	}
 	else
 	{
@@ -66,7 +69,7 @@ var formElement = '<form class = "stage"><label>Thrust</label><input class = "th
 
 var userID = "";
 
-var sendRequest = function(url,data)
+var sendRequest = function(url,data, method)
 {
 	var xhr = new XMLHttpRequest();
 	xhr.onreadystatechange = function() { 
@@ -75,8 +78,9 @@ var sendRequest = function(url,data)
 			alert(xhr.responseText);
 		}
 	}
-	xhr.open("POST", url, true);
+	xhr.open(method, url, false);
 	xhr.send(data);
+	return xhr.responseText;
 }
 function onSignIn(googleUser)
 {
