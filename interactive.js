@@ -38,6 +38,20 @@ var getAllStageValues = function()
 	console.log(rocket);
 	return rocket;
 }
+var loadStage = function()
+{
+	if(userID != "")
+	{
+		var data = JSON.stringify(userID);
+		sendRequest("./api/read.php",data);
+	}
+	else
+	{
+		//do something
+	}
+	$(".shipSelector").show().append('<div class = "ship"><h2>'+falcon9["Name"]+'</h2><p>2 Stages</p><button class = "useShip">Use Ship</button></div>');
+}
+
 var formCount = 0;
 var addStageButton = document.querySelectorAll(".addStage")[0];
 addStageButton.addEventListener("click",addStage);
@@ -45,9 +59,12 @@ addStageButton.addEventListener("click",addStage);
 var saveButton = document.querySelectorAll("#saveButton")[0];
 saveButton.addEventListener("click",saveStage);
 
+var loadButton = document.querySelectorAll(".loadButton")[0];
+loadButton.addEventListener("click",loadStage);
+
 var formElement = '<form class = "stage"><label>Thrust</label><input class = "thrust"><label>Initial Mass</label><input class = "initialMass"><label>Final Mass</label><input class = "finalMass"><label>Burn Time</label><input class = "burnTime"><label>Drag co-efficient</label><input class = "drag"><button class = "addStage">Add Stage</button></form>';
 
-var userID;
+var userID = "";
 
 var sendRequest = function(url,data)
 {

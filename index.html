@@ -4,11 +4,14 @@
 	<link rel = "stylesheet" href = "normalize.css">
 	<link rel = "stylesheet" href = "main.css">
 	<meta name="google-signin-client_id" content="148553179499-8ccg2aufhoeb0boot8qda7ii31ofilgd.apps.googleusercontent.com">
+
 </head>
 <body>
 	<nav>
 		<!--Insert Logo Here-->
-		<h1  id = "rocketName" placeholder = "Enter Rocket Name" contenteditable = "true"></h1>
+		<h1 id = "rocketName" placeholder = "Enter Rocket Name" contenteditable = "true"></h1>
+		<button class = "loadButton">Load A Configuration</button>
+
 		<div class="saveButtonLocation g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div>
 		<button class = "saveButtonLocation hiddenSave" id = "saveButton">Save Rocket</button>
 	</nav>
@@ -30,6 +33,9 @@
 			<input class = "drag">
 			<button class = "addStage">Add Stage</button>
 		</form>
+	</div>
+	<div class = "shipSelector">
+
 	</div>
 	<script src = "draw.js"></script>
 	<script src = "compute.js"></script>
