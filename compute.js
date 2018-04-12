@@ -142,7 +142,7 @@ function findOrbitHeight(rocket, planet)
 	}
 	else
 	{
-		//finishArc(rocket,100, planet);
+		finishArc(rocket,100, planet);
 	}
 	ctx.stroke();
 	/*
@@ -162,7 +162,7 @@ function stableOrbit(orbit, rocket, planet, frequencyOfCalc)
 	for(var stage = 0;stage<count; stage++)
 	{
 		var remainingBurnTime = 0;
-		for(i = 0;i<rocket.burnTime.length;i++)
+		for(i = stage;i<rocket.burnTime.length;i++)
 		{
 			remainingBurnTime += rocket.burnTime[i] * frequencyOfCalc;
 		}
@@ -213,9 +213,9 @@ function stableOrbit(orbit, rocket, planet, frequencyOfCalc)
 				rocket.rotation = theta;
 			}
 			airResistance(rocket);
-			var resultantUp = (Math.cos(rocket.rotation) * rocket.thrust[0] * 1000) - gravity(rocket, planet, false);
-			var resultantSideways = (Math.sin(rocket.rotation) * rocket.thrust[0] * 1000);
-			rocket.currMass -= (rocket.massInitial[0] - rocket.massFinal[0]) / (rocket.burnTime[0] * frequencyOfCalc);
+			var resultantUp = (Math.cos(rocket.rotation) * rocket.thrust[stage] * 1000) - gravity(rocket, planet, false);
+			var resultantSideways = (Math.sin(rocket.rotation) * rocket.thrust[stage] * 1000);
+			rocket.currMass -= (rocket.massInitial[stage] - rocket.massFinal[stage]) / (rocket.burnTime[stage] * frequencyOfCalc);
 			
 
 			//Change this section to accurately use XY co-ordinates from the resultant forces
@@ -239,7 +239,7 @@ function stableOrbit(orbit, rocket, planet, frequencyOfCalc)
 
 			if(i % 20 == 0)
 			{
-				//console.log(rocket.xPosition + ", " +rocket.yPosition + "at " + canvasRotation);
+				console.log(rocket.hVelocity + "/" + idealVelocity + "at " + canvasRotation);
 				draw(rocket, frequencyOfCalc/20,planet);
 			}
 		}
