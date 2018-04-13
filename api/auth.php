@@ -27,6 +27,7 @@ if (!curl_errno($ch)) {
     else
     {
         echo $http_code;
+        echo "auth failure";
         die($http_code);
     }
 }

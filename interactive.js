@@ -41,19 +41,12 @@ var getAllStageValues = function()
 var loadStage = function()
 {
 	//console.log(userID);
-	if(userID !== "")
+	$(".shipSelector").children().remove();
+	for (rocket of rockets)
 	{
-		var temp = {};
-		temp["userID"] = userID;
-		var data = JSON.stringify(userID);
-		console.log(data);
-		console.log(sendRequest("./api/read.php",data, "POST"));
+		$(".shipSelector").append('<div class = "ship"><h2>'+rocket["Name"]+'</h2><p>'+rocket["numStages"]+' Stage(s)</p><button class = "useShip">Use Ship</button></div>');
 	}
-	else
-	{
-		//do something
-	}
-	$(".shipSelector").show().append('<div class = "ship"><h2>'+falcon9["Name"]+'</h2><p>2 Stages</p><button class = "useShip">Use Ship</button></div>');
+	$(".shipSelector").show();
 }
 
 var formCount = 0;
@@ -70,20 +63,47 @@ var formElement = '<form class = "stage"><label>Thrust</label><input class = "th
 
 var userID = "";
 
+var rockets = [];
+rockets.push(falcon9);
+
 var sendRequest = function(url,data, method)
 {
 	var xhr = new XMLHttpRequest();
 	xhr.onreadystatechange = function() { 
 		if (xhr.readyState == 4 && xhr.status == 200)
 		{
-			alert(xhr.responseText);
+			if(method === "GET")
+			{
+				var userRockets = JSON.parse(xhr.responseText);
+				userRockets.forEach(function(rocket){
+					rockets.unshift(rocket); //Adds to the fornt of the array
+				});
+			}
+			else
+			{
+				alert("Action successfully completed")
+			}
 		}
 	}
-	xhr.open(method, url, false);
-	xhr.send(data);
-	return xhr.responseText;
+	if(method === "POST")
+	{
+		xhr.open(method, url, true);
+		xhr.send(data);
+	}
+	else if(method === "GET")
+	{
+		console.log(url+data);
+		xhr.open(method, url+data, true);
+		xhr.send(null);
+	}
+	//return xhr.responseText;
 }
-var rockets = [];
+
+function loadRockets()
+{
+	var data = "?userID="+userID;
+	sendRequest("./api/read.php",data, "GET");
+}
 function onSignIn(googleUser)
 {
 	var profile = googleUser.getBasicProfile();
@@ -91,7 +111,6 @@ function onSignIn(googleUser)
 	$(".g-signin2").addClass("hiddenSave");
 	userID = googleUser.getAuthResponse().id_token;
 
-	//Load pre-built configs
-	rockets.push(falcon9);
-	console.log(rockets);
+	//Load user configurations
+	loadRockets();
 }

@@ -1,6 +1,6 @@
 <?php
-$temp = json_decode(file_get_contents('php://input'));
-$data["userID"] = $temp;
+//$temp = json_decode(file_get_contents('php://input'));
+$data["userID"] = $_GET["userID"];
 require "../../password.php";
 $mysqli = new mysqli("localhost", "root", $password, "rocketsim");
 
@@ -9,27 +9,9 @@ require 'auth.php';
 $result = $mysqli->query("SELECT * FROM Rockets WHERE UserID = " . $googleID);
 if ($result->num_rows != 0) {
 	$rockets = $result->fetch_all(MYSQLI_ASSOC);
-	
-	/*
-	for($i = 0; $i<$numRows;$i++)
-	{
-		$rocket = $result->fetch_assoc();
-		echo "SELECT * FROM Stages WHERE RocketID = " . $rocket["RocketID"];
-		$result = $mysqli->query("SELECT * FROM Stages WHERE RocketID = " . $rocket["RocketID"]);
-		//echo json_encode($result->fetch_all());
-	}
-	*/
-	/*
-	while ($rocket = $result->fetch_assoc())
-	{
-		echo "SELECT * FROM Stages WHERE RocketID = " . $rocket["RocketID"];
-		$result = $mysqli->query("SELECT * FROM Stages WHERE RocketID = " . $rocket["RocketID"]);
-		//echo json_encode($result->fetch_all());
-	}
-	*/
+	$returnRockets = [];
 	foreach($rockets as $rocket)
 	{
-		//echo json_encode($rocket["RocketID"]);
 		$result = $mysqli->query("SELECT * FROM Stages WHERE RocketID = '" . $rocket["RocketID"]."'");
 		$stages = $result->fetch_all(MYSQLI_ASSOC);
 		if(!empty($stages))
@@ -44,9 +26,11 @@ if ($result->num_rows != 0) {
 				$rocket[$stageName]["massFinal"] = $stage["FinalMass"];
 				$rocket[$stageName]["burnTime"] = $stage["BurnTime"];
 				$rocket[$stageName]["drag"] = $stage["Drag"];
+				$rocket["numStages"] = $stage["StageNum"];
 			}
-			echo json_encode($rocket);
+			$returnRockets[] = $rocket;
 		}
 	}
+	echo json_encode($returnRockets);
 }
 ?>
