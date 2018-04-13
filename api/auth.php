@@ -27,7 +27,7 @@ if (!curl_errno($ch)) {
     else
     {
         echo $http_code;
-        echo curl_error($ch);
+        die($http_code);
     }
 }
 else
@@ -38,7 +38,7 @@ else
 }
 function handleUser($id, $mysqli)
 {
-    $result = $mysqli->query("SELECT * FROM 'Users' WHERE UserID = '". $id ."'");
+    $result = $mysqli->query("SELECT * FROM Users WHERE UserID = '". $id ."'");
     if($result->num_rows == 0) //$result is not an object -- to fix
     {
         $mysqli->query("INSERT INTO Users VALUES('".$id."','','2018-04-09')");

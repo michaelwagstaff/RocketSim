@@ -46,7 +46,8 @@ var loadStage = function()
 		var temp = {};
 		temp["userID"] = userID;
 		var data = JSON.stringify(userID);
-		console.log(sendRequest("./api/read.php",data, "GET"));
+		console.log(data);
+		console.log(sendRequest("./api/read.php",data, "POST"));
 	}
 	else
 	{
@@ -82,10 +83,15 @@ var sendRequest = function(url,data, method)
 	xhr.send(data);
 	return xhr.responseText;
 }
+var rockets = [];
 function onSignIn(googleUser)
 {
 	var profile = googleUser.getBasicProfile();
 	$("#saveButton").removeClass("hiddenSave");
 	$(".g-signin2").addClass("hiddenSave");
 	userID = googleUser.getAuthResponse().id_token;
+
+	//Load pre-built configs
+	rockets.push(falcon9);
+	console.log(rockets);
 }
