@@ -41,14 +41,20 @@ var getAllStageValues = function()
 var loadStage = function()
 {
 	//console.log(userID);
+	var i = 0;
 	$(".shipSelector").children().remove();
 	for (rocket of rockets)
 	{
-		$(".shipSelector").append('<div class = "ship"><h2>'+rocket["Name"]+'</h2><p>'+rocket["numStages"]+' Stage(s)</p><button class = "useShip">Use Ship</button></div>');
+		$(".shipSelector").append('<div class = "ship"><h2>'+rocket["Name"]+'</h2><p>'+rocket["numStages"]+' Stage(s)</p><button class = "useShip" id = "rocket'+i+'">Use Ship</button></div>');
+		i++;
 	}
 	$(".shipSelector").show();
+	console.log(rockets)
 }
-
+$("body").on('click','.useShip', function(){
+	console.log($(this).attr('id').substring(6));
+	//Add stage and call function to update
+});
 var formCount = 0;
 var addStageButton = document.querySelectorAll(".addStage")[0];
 addStageButton.addEventListener("click",addStage);
