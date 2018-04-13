@@ -1,6 +1,9 @@
 var addStage = function(e)
 {
-	e.preventDefault();
+	if(e!=0)
+	{
+		e.preventDefault();
+	}
 	var rocket = getAllStageValues();
 	$(".formContainer").append(formElement);
 	formCount+=1;
@@ -52,8 +55,27 @@ var loadStage = function()
 	console.log(rockets)
 }
 $("body").on('click','.useShip', function(){
-	console.log($(this).attr('id').substring(6));
-	//Add stage and call function to update
+	var index = $(this).attr('id').substring(6);
+	var rocket = rockets[index];
+	$("#rocketName")[0].innerHTML = rocket["Name"];
+	console.log(rocket);
+	for(var i = 0;i<rocket["numStages"]; i++)
+	{
+		var stageName = "Stage " + (i+1);
+		var stage = rocket[stageName];
+		var sInput = $(".stage")[i];
+		sInput[0].value = stage["thrust"];
+		sInput[1].value = stage["massInitial"];
+		sInput[2].value = stage["massFinal"];
+		sInput[3].value = stage["burnTime"];
+		sInput[4].value = stage["drag"];
+		if(i != rocket["numStages"] - 1)
+		{
+			$(".formContainer").append(formElement);
+		}
+	}
+	addStage(0);
+	$(".shipSelector").hide();
 });
 var formCount = 0;
 var addStageButton = document.querySelectorAll(".addStage")[0];
