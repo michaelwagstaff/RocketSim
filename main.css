@@ -66,6 +66,8 @@ label
 .shipSelector
 {
 	height:20rem;
+	max-height: 20rem;
+	overflow-y:scroll;
 	width:30rem;
 	background-color:#000;
 	position:fixed;
