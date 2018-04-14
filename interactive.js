@@ -66,17 +66,28 @@ var loadStage = function()
 	$(".shipSelector").show();
 	console.log(rockets);
 }
+var deleteRocket = function()
+{
+	var temp = {};
+	temp["userID"] = userID;
+	temp["RocketID"] = rocketID;
+	var data = JSON.stringify(temp);
+	sendRequest("./api/remove.php", data, "POST");
+}
+
 $("body").on('click','.useShip', function(){
 	var index = $(this).attr('id').substring(6);
 	var rocket = rockets[index];
 	if(!("stockShip" in rocket))
 	{
 		savedConfig = true;
+		$("#deleteButton").removeClass("hiddenSave");
 		rocketID = rocket["RocketID"];
 	}
 	else
 	{
 		savedConfig = false;
+		$("#deleteButton").addClass("hiddenSave");
 	}
 	console.log(savedConfig);
 	$("#rocketName")[0].innerHTML = rocket["Name"];
@@ -109,9 +120,13 @@ saveButton.addEventListener("click",saveStage);
 var loadButton = document.querySelectorAll(".loadButton")[0];
 loadButton.addEventListener("click",loadStage);
 
+var deleteButton = document.querySelectorAll("#deleteButton")[0];
+console.log(deleteButton);
+loadButton.addEventListener("click",deleteRocket);
+
 document.getElementById("rocketName").addEventListener("input", function() {
     savedConfig = false;
-    console.log(false);
+    $("#deleteButton").addClass("hiddenSave");
 });
 
 var formElement = '<form class = "stage"><label>Thrust</label><input class = "thrust"><label>Initial Mass</label><input class = "initialMass"><label>Final Mass</label><input class = "finalMass"><label>Burn Time</label><input class = "burnTime"><label>Drag co-efficient</label><input class = "drag"><button class = "addStage">Add Stage</button></form>';

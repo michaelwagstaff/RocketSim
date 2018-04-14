@@ -11,9 +11,11 @@
 		<!--Insert Logo Here-->
 		<h1 id = "rocketName" placeholder = "Enter Rocket Name" contenteditable = "true"></h1>
 		<button class = "loadButton">Load A Configuration</button>
-
-		<div class="saveButtonLocation g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div>
-		<button class = "saveButtonLocation hiddenSave" id = "saveButton">Save Rocket</button>
+		<div class = "buttonContainer">
+			<div class="saveButtonLocation g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div>
+			<button class = "saveButtonLocation hiddenSave" id = "saveButton">Save Rocket</button>
+			<button class = "deleteButtonLocation hiddenSave" id = "deleteButton">Delete Rocket</button>
+		</div>
 	</nav>
 	<canvas id = "canvas" width = "" height = "" >
 		<h1>Your browser does not support canvas elements</h1>

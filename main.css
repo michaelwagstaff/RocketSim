@@ -33,7 +33,7 @@ h1
   color:#ccc;
   display: inline-block; /* For Firefox */
 }
-.saveButtonLocation
+.buttonContainer
 {
 	position:fixed;
 	height:2rem;
