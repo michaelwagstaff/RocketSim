@@ -15,8 +15,8 @@ $date = new DateTime();
 $info["DateCreated"] = date('Y-m-d H:i:s',$date->getTimestamp());
 echo $info["DateCreated"];
 
-$mysqli->query("DELETE FROM Stages WHERE RocketID = '".$data["RocketID"]."'");
-$mysqli->query("DELETE FROM Rockets WHERE RocketID = '".$data["RocketID"]."' AND UserID = '".$googleID."'");
+$mysqli->query("DELETE FROM Stages WHERE RocketID = '".$info["RocketID"]."'");
+$mysqli->query("DELETE FROM Rockets WHERE RocketID = '".$info["RocketID"]."' AND UserID = '".$googleID."'");
 
 
 $mysqli->query("INSERT INTO Rockets VALUES('".$info["RocketID"]."','".$googleID."','".$info["Name"]."','2018-04-09')");

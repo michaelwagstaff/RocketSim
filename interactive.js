@@ -12,7 +12,7 @@ var addStage = function(e)
 	addStageButton.addEventListener("click",addStage);
 	main(rocket);
 }
-var saveStage = function(savedConfig,e)
+var saveStage = function(e)
 {
 	e.preventDefault();
 	var rocket = getAllStageValues();
@@ -64,23 +64,21 @@ var loadStage = function()
 		i++;
 	}
 	$(".shipSelector").show();
-	if(!("stockShip" in rocket))
-	{
-		savedConfig = true;
-	}
-	else
-	{
-		savedConfig = false;
-	}
 	console.log(rockets);
 }
 $("body").on('click','.useShip', function(){
 	var index = $(this).attr('id').substring(6);
 	var rocket = rockets[index];
-	if(savedConfig)
+	if(!("stockShip" in rocket))
 	{
+		savedConfig = true;
 		rocketID = rocket["RocketID"];
 	}
+	else
+	{
+		savedConfig = false;
+	}
+	console.log(savedConfig);
 	$("#rocketName")[0].innerHTML = rocket["Name"];
 	console.log(rocket);
 	for(var i = 0;i<rocket["numStages"]; i++)
@@ -106,10 +104,10 @@ var addStageButton = document.querySelectorAll(".addStage")[0];
 addStageButton.addEventListener("click",addStage);
 
 var saveButton = document.querySelectorAll("#saveButton")[0];
-saveButton.addEventListener("click",saveStage(savedConfig));
+saveButton.addEventListener("click",saveStage);
 
 var loadButton = document.querySelectorAll(".loadButton")[0];
-loadButton.addEventListener("click",loadStage());
+loadButton.addEventListener("click",loadStage);
 
 document.getElementById("rocketName").addEventListener("input", function() {
     savedConfig = false;
