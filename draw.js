@@ -25,6 +25,14 @@ function dumpData(h, v)
 
 function draw(rocket, frequencyOfCalc, planet)
 {
+	ctx.lineTo(rocket.xPosition * canvasScale,rocket.yPosition * canvasScale)
+	ctx.stroke();
+	canvasRotation = Math.atan(rocket.xPosition/rocket.yPosition);
+	if(rocket.xPosition < 0)
+	{
+		canvasRotation += Math.PI;
+	}
+	/*
 	var hDistance = rocket.hVelocity/frequencyOfCalc;
 	var vDistance = rocket.vVelocity/frequencyOfCalc;
 	var newVPosition = -vDistance * canvasScale + lastVPosition;
@@ -35,6 +43,7 @@ function draw(rocket, frequencyOfCalc, planet)
 	ctx.rotate((hDistance/circumference)*(Math.PI)*2);
 	lastVPosition = newVPosition;
 	//dumpData(newHPosition, newVPosition);
+	*/
 }
 function reset()
 {
