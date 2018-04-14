@@ -28,7 +28,7 @@ function draw(rocket, frequencyOfCalc, planet)
 	ctx.lineTo(rocket.xPosition * canvasScale,rocket.yPosition * canvasScale)
 	ctx.stroke();
 	canvasRotation = Math.atan(rocket.xPosition/rocket.yPosition);
-	if(rocket.xPosition < 0)
+	if(rocket.yPosition < 0)
 	{
 		canvasRotation += Math.PI;
 	}

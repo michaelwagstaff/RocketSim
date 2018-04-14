@@ -32,7 +32,7 @@ class Rocket
 		this.vVelocity = 0;
 		this.totalMass = 0;
 		this.currMass = 0;
-		this.payloadMass = 0;
+		this.payloadMass = 5000;
 		this.rotation = 0;
 		this.relativeGravity = 0;
 		this.xPosition = 0;
@@ -136,14 +136,17 @@ function findOrbitHeight(rocket, planet)
 		console.log("apogee: " + orbit["apogee"]);
 	}
 	orbit["apogee"] = originalHeight;
+	/*
 	if(rocket.relativeGravity<=0.01)
 	{
 		//drawOrbit(rocket,planet);
 	}
 	else
 	{
-		//finishArc(rocket,100, planet);
+		
 	}
+	*/
+	finishArc(rocket,100, planet);
 	ctx.stroke();
 	/*
 	
@@ -188,7 +191,7 @@ function stableOrbit(orbit, rocket, planet, frequencyOfCalc)
 
 
 			//Only includes vertical impulse to counter gravity
-			theta = Math.PI/2 - Math.asin(gravity(rocket, planet, true) / (rocket.thrust[stage]*1000));
+			theta = Math.PI/2 - Math.atan(gravity(rocket,planet,true) * (remainingBurnTime/frequencyOfCalc) / requiredHorizontalImpulse);
 			
 
 			if(theta<0)
@@ -255,8 +258,8 @@ function stableOrbit(orbit, rocket, planet, frequencyOfCalc)
 			}
 			if(i%300 == 0)
 			{
-				console.log("Current Mass: " + rocket.currMass);
-				console.log("Vertical acceleration: " + vAcceleration + ", Y acceleration: " +  rocket.yAcceleration);
+				console.log("Vertical Acceleration: " + vAcceleration + ", Y acceleration:" + rocket.yAcceleration + ", X acceleration: " + rocket.xAcceleration + ", rotation" + canvasRotation);
+				//console.log("Vertical acceleration: " + vAcceleration + ", Y acceleration: " +  rocket.yAcceleration);
 				console.log("Horizontal Velocity: " + rocket.hVelocity + ", Vertical Velocity: " + rocket.vVelocity);
 				console.log("Height: " + rocket.height);
 			}
@@ -278,7 +281,10 @@ function drawOrbit(rocket,planet)
 function finishArc(rocket, frequencyOfCalc, planet)
 {
 	//ctx.beginPath();
-
+	if(rocket.vVelocity>100)
+	{
+		frequencyOfCalc /= 10;
+	}
 	for(var i = 0;i<100000;i++)
 	{
 		var resultantUp = 0 - gravity(rocket, planet, false);
@@ -286,7 +292,7 @@ function finishArc(rocket, frequencyOfCalc, planet)
 		var hAcceleration = 0;
 		rocket.yAcceleration = vAcceleration*Math.cos(canvasRotation);
 		rocket.xAcceleration = vAcceleration*Math.sin(canvasRotation);
-		
+
 		rocket.xVelocity += rocket.xAcceleration / frequencyOfCalc;
 		rocket.yVelocity += rocket.yAcceleration / frequencyOfCalc;
 
@@ -303,9 +309,12 @@ function finishArc(rocket, frequencyOfCalc, planet)
 		}
 		if(i%300 == 0)
 		{
+			
+			console.log("Vertical Acceleration: " + vAcceleration + ", Y acceleration:" + rocket.yAcceleration + ", X acceleration: " + rocket.xAcceleration + ", rotation" + canvasRotation);
 			console.log("Current Mass: " + rocket.currMass);
 			console.log("X Velocity: " + rocket.xVelocity + ", Y Velocity: " + rocket.yVelocity);
 			console.log("Horizontal Velocity: " + rocket.hVelocity + ", Vertical Velocity: " + rocket.vVelocity);
+			
 		}
 		
 	}
