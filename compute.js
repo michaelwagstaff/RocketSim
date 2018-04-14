@@ -138,11 +138,11 @@ function findOrbitHeight(rocket, planet)
 	orbit["apogee"] = originalHeight;
 	if(rocket.relativeGravity<=0.01)
 	{
-		drawOrbit(rocket,planet);
+		//drawOrbit(rocket,planet);
 	}
 	else
 	{
-		finishArc(rocket,100, planet);
+		//finishArc(rocket,100, planet);
 	}
 	ctx.stroke();
 	/*
@@ -162,11 +162,14 @@ function stableOrbit(orbit, rocket, planet, frequencyOfCalc)
 	for(var stage = 0;stage<count; stage++)
 	{
 		var remainingBurnTime = 0;
+		rocket.currMass = rocket.payloadMass;
 		for(i = stage;i<rocket.burnTime.length;i++)
 		{
+			rocket.currMass += rocket.massInitial[i];
 			remainingBurnTime += rocket.burnTime[i] * frequencyOfCalc;
+			console.log("REMAINING BURN TIME: " + remainingBurnTime);
 		}
-		for (i = 0; i < rocket.burnTime[0] * frequencyOfCalc; i++)
+		for (i = 0; i < rocket.burnTime[stage] * frequencyOfCalc; i++)
 		{
 			toApogee = Math.pow(rocket.vVelocity, 2) / 19.6;
 			remainingBurnTime-= 1;
@@ -185,7 +188,7 @@ function stableOrbit(orbit, rocket, planet, frequencyOfCalc)
 
 
 			//Only includes vertical impulse to counter gravity
-			theta = Math.PI/2 - Math.atan(gravity(rocket, planet, true) * (remainingBurnTime/frequencyOfCalc) / requiredHorizontalImpulse);
+			theta = Math.PI/2 - Math.asin(gravity(rocket, planet, true) / (rocket.thrust[stage]*1000));
 			
 
 			if(theta<0)
@@ -196,6 +199,10 @@ function stableOrbit(orbit, rocket, planet, frequencyOfCalc)
 			{
 				theta = Math.PI;
 			}
+			if(stage == count-1 && rocket.height > orbit.apogee)
+			{
+				theta = Math.PI / 2
+			}
 			if(rocket.height > orbit.apogee && rocket.vVelocity >= 0)
 			{
 				theta = Math.PI / 2;
@@ -203,6 +210,10 @@ function stableOrbit(orbit, rocket, planet, frequencyOfCalc)
 				{
 					theta = 0;
 				}
+			}
+			if(rocket.height + toApogee >orbit.apogee)
+			{
+				theta = Math.PI / 2;
 			}
 			if(rocket.height<10000)
 			{
@@ -239,8 +250,15 @@ function stableOrbit(orbit, rocket, planet, frequencyOfCalc)
 
 			if(i % 20 == 0)
 			{
-				console.log(rocket.hVelocity + "/" + idealVelocity + "at " + canvasRotation);
+				//console.log(rocket.hVelocity + "/" + idealVelocity + "at " + canvasRotation);
 				draw(rocket, frequencyOfCalc/20,planet);
+			}
+			if(i%300 == 0)
+			{
+				console.log("Current Mass: " + rocket.currMass);
+				console.log("Vertical acceleration: " + vAcceleration + ", Y acceleration: " +  rocket.yAcceleration);
+				console.log("Horizontal Velocity: " + rocket.hVelocity + ", Vertical Velocity: " + rocket.vVelocity);
+				console.log("Height: " + rocket.height);
 			}
 		}
 		console.log("Stage Seperation");
@@ -261,7 +279,7 @@ function finishArc(rocket, frequencyOfCalc, planet)
 {
 	//ctx.beginPath();
 
-	for(var i = 0;i<10000000;i++)
+	for(var i = 0;i<100000;i++)
 	{
 		var resultantUp = 0 - gravity(rocket, planet, false);
 		var vAcceleration = resultantUp / rocket.currMass;
@@ -282,6 +300,12 @@ function finishArc(rocket, frequencyOfCalc, planet)
 		{
 			//console.log(rocket.xPosition + ", " +rocket.yPosition + "at " + canvasRotation);
 			draw(rocket, frequencyOfCalc/20, planet);
+		}
+		if(i%300 == 0)
+		{
+			console.log("Current Mass: " + rocket.currMass);
+			console.log("X Velocity: " + rocket.xVelocity + ", Y Velocity: " + rocket.yVelocity);
+			console.log("Horizontal Velocity: " + rocket.hVelocity + ", Vertical Velocity: " + rocket.vVelocity);
 		}
 		
 	}
