@@ -12,13 +12,25 @@ var addStage = function(e)
 	addStageButton.addEventListener("click",addStage);
 	main(rocket);
 }
-var saveStage = function(e)
+var saveStage = function(savedConfig,e)
 {
 	e.preventDefault();
 	var rocket = getAllStageValues();
+	console.log(savedConfig);
+	if(savedConfig)
+	{
+		rocket["RocketID"] = rocketID;
+	}
 	rocket["userID"] = userID;
 	var data = JSON.stringify(rocket);
-	sendRequest("./api/create.php", data, "POST");
+	if(savedConfig)
+	{
+		sendRequest("./api/update.php", data, "POST");
+	}
+	else
+	{
+		sendRequest("./api/create.php", data, "POST");
+	}
 }
 var getAllStageValues = function()
 {
@@ -52,11 +64,23 @@ var loadStage = function()
 		i++;
 	}
 	$(".shipSelector").show();
-	console.log(rockets)
+	if(!("stockShip" in rocket))
+	{
+		savedConfig = true;
+	}
+	else
+	{
+		savedConfig = false;
+	}
+	console.log(rockets);
 }
 $("body").on('click','.useShip', function(){
 	var index = $(this).attr('id').substring(6);
 	var rocket = rockets[index];
+	if(savedConfig)
+	{
+		rocketID = rocket["RocketID"];
+	}
 	$("#rocketName")[0].innerHTML = rocket["Name"];
 	console.log(rocket);
 	for(var i = 0;i<rocket["numStages"]; i++)
@@ -82,15 +106,21 @@ var addStageButton = document.querySelectorAll(".addStage")[0];
 addStageButton.addEventListener("click",addStage);
 
 var saveButton = document.querySelectorAll("#saveButton")[0];
-saveButton.addEventListener("click",saveStage);
+saveButton.addEventListener("click",saveStage(savedConfig));
 
 var loadButton = document.querySelectorAll(".loadButton")[0];
-loadButton.addEventListener("click",loadStage);
+loadButton.addEventListener("click",loadStage());
+
+document.getElementById("rocketName").addEventListener("input", function() {
+    savedConfig = false;
+    console.log(false);
+});
 
 var formElement = '<form class = "stage"><label>Thrust</label><input class = "thrust"><label>Initial Mass</label><input class = "initialMass"><label>Final Mass</label><input class = "finalMass"><label>Burn Time</label><input class = "burnTime"><label>Drag co-efficient</label><input class = "drag"><button class = "addStage">Add Stage</button></form>';
 
 var userID = "";
-
+var savedConfig = false;
+var rocketID;
 var rockets = [];
 rockets.push(falcon9);
 

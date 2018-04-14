@@ -1,4 +1,4 @@
-var falcon9 = JSON.parse('{"Name":"Falcon 9","numStages":"2","Stage 1":{"thrust":7607,"massInitial":421300,"massFinal":25600,"burnTime":162,"drag":0.25},"Stage 2":{"thrust":934,"massInitial":96570,"massFinal":3900,"burnTime":397,"drag":0.25}}');
+var falcon9 = JSON.parse('{"Name":"Falcon 9","numStages":"2","stockShip":"true","Stage 1":{"thrust":7607,"massInitial":421300,"massFinal":25600,"burnTime":162,"drag":0.25},"Stage 2":{"thrust":934,"massInitial":96570,"massFinal":3900,"burnTime":397,"drag":0.25}}');
 console.log(falcon9);
 var G = 6.67408E-11;
 class Orbit
