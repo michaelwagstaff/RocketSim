@@ -204,7 +204,11 @@ function stableOrbit(orbit, rocket, planet, frequencyOfCalc)
 			{
 				requiredImpulse = 0;
 			}
-			theta = Math.PI/2 - Math.atan(((gravity(rocket,planet,true) + airResistance["vertical"])  * (remainingBurnTime/frequencyOfCalc) + requiredImpulse) / requiredHorizontalImpulse);
+			theta = Math.PI/2 - Math.asin((gravity(rocket,planet,true) + airResistance["vertical"] + requiredImpulse/(remainingBurnTime/frequencyOfCalc)) / (rocket.thrust[stage] * 1000));
+			if(isNaN(theta))
+			{
+				theta = 0;
+			}
 			
 
 			if(theta<0)
@@ -215,18 +219,21 @@ function stableOrbit(orbit, rocket, planet, frequencyOfCalc)
 			{
 				theta = Math.PI;
 			}
+			
 			if(rocket.height > orbit.apogee && rocket.vVelocity >= 0)
 			{
 				theta = Math.PI / 2;
 				if(rocket.relativeGravity < 0)
 				{
-					theta = 0;
+					rocket.thrust[stage] = 0;
 				}
 			}
+			/*
 			if(rocket.height + toApogee < orbit.apogee && rocket.vVelocity < 0)
 			{
 				theta = 0;
 			}
+			*/
 			if(rocket.height<10000)
 			{
 				rocket.rotation = 0;
@@ -265,6 +272,8 @@ function stableOrbit(orbit, rocket, planet, frequencyOfCalc)
 			}
 			if(i%300 == 0)
 			{
+				console.log("Vertical: " + (gravity(rocket,planet,true) + requiredImpulse/(remainingBurnTime/frequencyOfCalc) + 0)); //airResistance["vertical"]
+				console.log("Hyp: " + (rocket.thrust[stage] * 1000));
 				console.log("Vertical Acceleration: " + vAcceleration + ", Y acceleration:" + rocket.yAcceleration + ", X acceleration: " + rocket.xAcceleration + ", rotation" + canvasRotation);
 				//console.log("Vertical acceleration: " + vAcceleration + ", Y acceleration: " +  rocket.yAcceleration);
 				console.log("Horizontal Velocity: " + rocket.hVelocity + ", Vertical Velocity: " + rocket.vVelocity);
