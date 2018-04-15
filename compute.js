@@ -198,6 +198,8 @@ function stableOrbit(orbit, rocket, planet, frequencyOfCalc)
 				if(rocket.relativeGravity < 0)
 				{
 					rocket.thrust[stage] = 0;
+					console.log("Reached Orbit, Engines Cut");
+					return rocket.height;
 				}
 			}
 			/*
@@ -252,7 +254,7 @@ function stableOrbit(orbit, rocket, planet, frequencyOfCalc)
 function finishArc(rocket, frequencyOfCalc, planet)
 {
 	var i = 0;
-	while(canvasRotation < Math.PI)
+	while(canvasRotation < Math.PI && rocket.height > 0)
 	{
 		var resultantUp = 0 - gravity(rocket, planet, false);
 		var vAcceleration = resultantUp / rocket.currMass;
@@ -275,7 +277,7 @@ function finishArc(rocket, frequencyOfCalc, planet)
 		}
 		i++
 	}
-	while(canvasRotation >= Math.PI && canvasRotation <Math.PI *2)
+	while(canvasRotation >= Math.PI && canvasRotation <Math.PI *2 && rocket.height > 0)
 	{
 		var resultantUp = 0 - gravity(rocket, planet, false);
 		var vAcceleration = resultantUp / rocket.currMass;
