@@ -125,7 +125,7 @@ loadButton.addEventListener("click",loadStage);
 
 var deleteButton = document.querySelectorAll("#deleteButton")[0];
 console.log(deleteButton);
-loadButton.addEventListener("click",deleteRocket);
+deleteButton.addEventListener("click",deleteRocket);
 
 document.getElementById("rocketName").addEventListener("input", function() {
     savedConfig = false;

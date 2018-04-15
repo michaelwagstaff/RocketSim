@@ -44,6 +44,11 @@ h1
 {
 	display:none;
 }
+#deleteButton
+{
+	background-color: #dc3545;
+	color:#fff;
+}
 canvas
 {
 	height:100vh;
