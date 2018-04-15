@@ -180,6 +180,10 @@ function stableOrbit(orbit, rocket, planet, frequencyOfCalc)
 		for (i = 0; i < rocket.burnTime[stage] * frequencyOfCalc; i++)
 		{
 			toApogee = Math.pow(rocket.vVelocity, 2) / 19.6;
+			if(rocket.vVelocity<0)
+			{
+				toApogee = -toApogee;
+			}
 			remainingBurnTime-= 1;
 
 
@@ -196,6 +200,10 @@ function stableOrbit(orbit, rocket, planet, frequencyOfCalc)
 
 			var airResistance = findAirResistance(rocket, stage);
 			//Only includes vertical impulse to counter gravity
+			if(requiredImpulse < 0)
+			{
+				requiredImpulse = 0;
+			}
 			theta = Math.PI/2 - Math.atan(((gravity(rocket,planet,true) + airResistance["vertical"])  * (remainingBurnTime/frequencyOfCalc) + requiredImpulse) / requiredHorizontalImpulse);
 			
 
@@ -207,10 +215,6 @@ function stableOrbit(orbit, rocket, planet, frequencyOfCalc)
 			{
 				theta = Math.PI;
 			}
-			if(stage == count-1 && rocket.height > orbit.apogee)
-			{
-				theta = Math.PI / 2
-			}
 			if(rocket.height > orbit.apogee && rocket.vVelocity >= 0)
 			{
 				theta = Math.PI / 2;
@@ -219,9 +223,9 @@ function stableOrbit(orbit, rocket, planet, frequencyOfCalc)
 					theta = 0;
 				}
 			}
-			if(rocket.height + toApogee >orbit.apogee)
+			if(rocket.height + toApogee < orbit.apogee && rocket.vVelocity < 0)
 			{
-				theta = Math.PI / 2;
+				theta = 0;
 			}
 			if(rocket.height<10000)
 			{
