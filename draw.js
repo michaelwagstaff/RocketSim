@@ -24,12 +24,16 @@ function dumpData(h, v)
 
 function draw(rocket, frequencyOfCalc, planet)
 {
-	ctx.lineTo(rocket.xPosition * canvasScale,rocket.yPosition * canvasScale)
+	ctx.lineTo(rocket.xPosition * canvasScale,-rocket.yPosition * canvasScale)
 	ctx.stroke();
 	canvasRotation = Math.atan(rocket.xPosition/rocket.yPosition);
 	if(rocket.yPosition < 0)
 	{
 		canvasRotation += Math.PI;
+	}
+	if(rocket.yPosition >= 0 && rocket.xPosition<0)
+	{
+		canvasRotation += Math.PI*2
 	}
 }
 function reset()

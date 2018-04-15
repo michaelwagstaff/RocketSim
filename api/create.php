@@ -21,8 +21,8 @@ foreach($data as $s)
 {
 	$mysqli->query("INSERT INTO Stages VALUES(".$i.",'".$info["RocketID"]."',".$s["thrust"].",".$s["massInitial"].",".$s["massFinal"].",".$s["burnTime"].",".$s["drag"].")");
 	$i++;
-	echo $info["Name"]." has been saved";
 }
+echo $info["Name"]." has been saved";
 
 
 

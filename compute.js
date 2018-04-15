@@ -130,7 +130,7 @@ function findOrbitHeight(rocket, planet)
 		console.log("apogee: " + orbit["apogee"]);
 	}
 	orbit["apogee"] = originalHeight;
-	finishArc(rocket,100, planet);
+	finishArc(rocket,10, planet);
 	ctx.stroke();
 }
 function stableOrbit(orbit, rocket, planet, frequencyOfCalc)
@@ -214,14 +214,16 @@ function stableOrbit(orbit, rocket, planet, frequencyOfCalc)
 			{
 				rocket.rotation = theta;
 			}
+
+			//Simulates perpendicular and parallel to surface
 			var resultantUp = (Math.cos(rocket.rotation) * rocket.thrust[stage] * 1000) - gravity(rocket, planet, false) - airResistance["vertical"];
 			var resultantSideways = (Math.sin(rocket.rotation) * rocket.thrust[stage] * 1000)  - airResistance["horizontal"];
 			rocket.currMass -= (rocket.massInitial[stage] - rocket.massFinal[stage]) / (rocket.burnTime[stage] * frequencyOfCalc);
 			
-
-			//Change this section to accurately use XY co-ordinates from the resultant forces
 			var vAcceleration = resultantUp / rocket.currMass;
 			var hAcceleration = resultantSideways / rocket.currMass;
+
+			//Converts and simulates in cartesian space
 			rocket.yAcceleration = vAcceleration*Math.cos(canvasRotation) - hAcceleration * Math.sin(canvasRotation);
 			rocket.xAcceleration = vAcceleration*Math.sin(canvasRotation) + hAcceleration * Math.cos(canvasRotation);
 			
@@ -231,6 +233,7 @@ function stableOrbit(orbit, rocket, planet, frequencyOfCalc)
 			rocket.xPosition += rocket.xVelocity / frequencyOfCalc;
 			rocket.yPosition += rocket.yVelocity / frequencyOfCalc;
 
+			//Converts back to system for pathfinding
 			rocket.vVelocity = rocket.yVelocity*Math.cos(canvasRotation) + rocket.xVelocity*Math.sin(canvasRotation);
 			rocket.hVelocity = - rocket.yVelocity*Math.sin(canvasRotation) + rocket.xVelocity*Math.cos(canvasRotation);
 			rocket.height = Math.sqrt(Math.pow(rocket.xPosition, 2) + Math.pow(rocket.yPosition, 2)) - planet.radius;
@@ -246,21 +249,10 @@ function stableOrbit(orbit, rocket, planet, frequencyOfCalc)
 	console.log("Burn Complete");
 	return rocket.height;
 }
-
-function drawOrbit(rocket,planet)
-{
-	ctx.moveTo(canvas.width*0.5, canvas.height * -0.5);
-	ctx.beginPath();
-	ctx.arc(0, 0, canvas.height * 0.3 + canvasScale * rocket.height, 0,Math.PI * 2);
-	ctx.stroke();
-}
 function finishArc(rocket, frequencyOfCalc, planet)
 {
-	if(rocket.vVelocity>100)
-	{
-		frequencyOfCalc /= 10;
-	}
-	for(var i = 0;i<100000;i++)
+	var i = 0;
+	while(canvasRotation < Math.PI)
 	{
 		var resultantUp = 0 - gravity(rocket, planet, false);
 		var vAcceleration = resultantUp / rocket.currMass;
@@ -277,10 +269,34 @@ function finishArc(rocket, frequencyOfCalc, planet)
 		rocket.vVelocity = rocket.yVelocity*Math.cos(canvasRotation) + rocket.xVelocity*Math.sin(canvasRotation);
 		rocket.hVelocity = - rocket.yVelocity*Math.sin(canvasRotation) + rocket.xVelocity*Math.cos(canvasRotation);
 		rocket.height = Math.sqrt(Math.pow(rocket.xPosition, 2) + Math.pow(rocket.yPosition, 2)) - planet.radius;
-		if(i % 20 == 0)
+		if(i % 10 == 0)
 		{
 			draw(rocket, frequencyOfCalc/20, planet);
 		}
+		i++
+	}
+	while(canvasRotation >= Math.PI && canvasRotation <Math.PI *2)
+	{
+		var resultantUp = 0 - gravity(rocket, planet, false);
+		var vAcceleration = resultantUp / rocket.currMass;
+		var hAcceleration = 0;
+		rocket.yAcceleration = vAcceleration*Math.cos(canvasRotation);
+		rocket.xAcceleration = vAcceleration*Math.sin(canvasRotation);
+
+		rocket.xVelocity += rocket.xAcceleration / frequencyOfCalc;
+		rocket.yVelocity += rocket.yAcceleration / frequencyOfCalc;
+
+		rocket.xPosition += rocket.xVelocity / frequencyOfCalc;
+		rocket.yPosition += rocket.yVelocity / frequencyOfCalc;
+
+		rocket.vVelocity = rocket.yVelocity*Math.cos(canvasRotation) + rocket.xVelocity*Math.sin(canvasRotation);
+		rocket.hVelocity = - rocket.yVelocity*Math.sin(canvasRotation) + rocket.xVelocity*Math.cos(canvasRotation);
+		rocket.height = Math.sqrt(Math.pow(rocket.xPosition, 2) + Math.pow(rocket.yPosition, 2)) - planet.radius;
+		if(i % 10 == 0)
+		{
+			draw(rocket, frequencyOfCalc/20, planet);
+		}
+		i++
 	}
 	ctx.stroke();
 }

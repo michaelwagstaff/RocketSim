@@ -26,18 +26,6 @@ foreach($data as $s)
 {
 	$mysqli->query("INSERT INTO Stages VALUES(".$i.",'".$info["RocketID"]."',".$s["thrust"].",".$s["massInitial"].",".$s["massFinal"].",".$s["burnTime"].",".$s["drag"].")");
 	$i++;
-	echo $info["Name"]." has been saved";
 }
-
-
-
-function getAlphaNumericID()
-{
-	$characters = array_merge(range(0,9), range('a', 'z'),range('A', 'Z'));
-	$id = "";
-	for($i=0; $i < 10; $i++) {
-		$id .= $characters[mt_rand(0, count($characters) - 1)];
-	}
-	return $id;
-}
+echo $info["Name"]." has been saved";
 ?>
