@@ -4,12 +4,12 @@ var addStage = function(e)
 	{
 		e.preventDefault();
 	}
-	var rocket = getAllStageValues();
 	$(".formContainer").append(formElement);
-	formCount+=1;
-	addStageButton = document.querySelectorAll(".addStage")[formCount];
-	console.log(addStageButton);
-	addStageButton.addEventListener("click",addStage);
+	updateSim();
+}	
+var updateSim = function()
+{
+	var rocket = getAllStageValues();
 	main(rocket);
 }
 var saveStage = function(e)
@@ -114,6 +114,9 @@ var formCount = 0;
 var addStageButton = document.querySelectorAll(".addStage")[0];
 addStageButton.addEventListener("click",addStage);
 
+var updateButton = document.querySelectorAll(".updateSim")[0];
+updateButton.addEventListener("click",updateSim);
+
 var saveButton = document.querySelectorAll("#saveButton")[0];
 saveButton.addEventListener("click",saveStage);
 
@@ -129,7 +132,7 @@ document.getElementById("rocketName").addEventListener("input", function() {
     $("#deleteButton").addClass("hiddenSave");
 });
 
-var formElement = '<form class = "stage"><label>Thrust</label><input class = "thrust"><label>Initial Mass</label><input class = "initialMass"><label>Final Mass</label><input class = "finalMass"><label>Burn Time</label><input class = "burnTime"><label>Drag co-efficient</label><input class = "drag"><button class = "addStage">Add Stage</button></form>';
+var formElement = '<form class = "stage"><label>Thrust</label><input class = "thrust" placeholder="kN"><label>Initial Mass</label><input class = "initialMass" placeholder="kg"><label>Final Mass</label><input class = "finalMass" placeholder="kg"><label>Burn Time</label><input class = "burnTime" placeholder="s"><label>Drag co-efficient</label><input class = "drag" placeholder="no units"></form>';
 
 var userID = "";
 var savedConfig = false;

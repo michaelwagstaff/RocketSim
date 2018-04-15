@@ -54,14 +54,31 @@ canvas
 	position:fixed;
 	bottom:0;
 	height:auto;
+	height:6.75em;
 	max-height:7em;
 	overflow-y: auto;
-	width:100vw;
+	width:calc(100vw - 7.5em);
 }
 label
 {
 	color:#fff;
 	margin-left:1em;
+}
+.formButtonContainer
+{
+	bottom:0;
+	height:7em;
+	width:7em;
+	right:0.5em;
+	position:fixed;
+}
+.formButtonContainer button
+{
+	height:3em;
+	margin-bottom: 0.25em;
+	margin-top: 0.25em;
+	box-sizing: border-box;
+	width:7em;
 }
 .shipSelector
 {
