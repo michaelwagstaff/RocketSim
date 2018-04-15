@@ -75,7 +75,7 @@ function gravity(rocket, planet, pathfinding)
 	}
 	return G * rocket.currMass * planet.mass * relativeGravity / Math.pow((planet.radius + rocket.height),2);
 }
-function airResistance(rocket)
+function findAirResistance(rocket, stage)
 {
 	var standardPressure = 101.325e3;
 	var standardTemp = 288.15;
@@ -86,16 +86,21 @@ function airResistance(rocket)
 	var pressure;
 	var density = 0;
 	var airResistance = 0;
-	var airResistanceArray = [];
+	var airResistanceArray = {};
 	var total = Math.sqrt(Math.pow(rocket.vVelocity, 2) + Math.pow(rocket.hVelocity, 2));
 	//Declare an array
 	pressure = standardPressure * Math.pow(1 - (tempLapseRate * rocket.height) / standardTemp, (surfaceGravity * massOfAir) / (gasConstant * tempLapseRate));
 	//console.log("Air Pressure: {0}", pressure);
 	var specificGasConstant = gasConstant / massOfAir;
 	density = pressure / (specificGasConstant * 273); //Using 273 in place of current temperature
-	airResistance = rocket.coefficientOfDrag * density * Math.pow(total, 2) * Math.PI * Math.pow(5.2, 2) / 2;
-	airResistanceArray.push(Math.cos(rocket.rotation) * airResistance);
-	airResistanceArray.push(Math.sin(rocket.rotation) * airResistance);
+	airResistance = rocket.coefficientOfDrag[stage] * density * Math.pow(total, 2) * Math.PI * Math.pow(5.2, 2) / 2;
+	if(isNaN(airResistance))
+	{
+		airResistance = 0;
+	}
+	airResistanceArray["vertical"] = Math.cos(rocket.rotation) * airResistance;
+	airResistanceArray["horizontal"] = Math.sin(rocket.rotation) * airResistance;
+	return airResistanceArray;
 }
 function main(rocketInput)
 {
@@ -179,7 +184,7 @@ function stableOrbit(orbit, rocket, planet, frequencyOfCalc)
 
 
 			//Use grav field equations
-			requiredImpulse = planet.g * rocket.currMass * (orbit.apogee - rocket.height - toApogee)
+			requiredImpulse = (G * rocket.currMass * planet.mass / (rocket.height + toApogee + planet.radius)) - (G * rocket.currMass * planet.mass / (orbit.apogee + planet.radius));
 			
 
 			var impulsePerSecond = requiredImpulse * frequencyOfCalc / remainingBurnTime;
@@ -189,9 +194,9 @@ function stableOrbit(orbit, rocket, planet, frequencyOfCalc)
 			var theta;
 			rocket.relativeGravity = 1 - (rocket.hVelocity / idealVelocity);
 
-
+			var airResistance = findAirResistance(rocket, stage);
 			//Only includes vertical impulse to counter gravity
-			theta = Math.PI/2 - Math.atan(gravity(rocket,planet,true) * (remainingBurnTime/frequencyOfCalc) / requiredHorizontalImpulse);
+			theta = Math.PI/2 - Math.atan(((gravity(rocket,planet,true) + airResistance["vertical"])  * (remainingBurnTime/frequencyOfCalc) + requiredImpulse) / requiredHorizontalImpulse);
 			
 
 			if(theta<0)
@@ -226,16 +231,14 @@ function stableOrbit(orbit, rocket, planet, frequencyOfCalc)
 			{
 				rocket.rotation = theta;
 			}
-			airResistance(rocket);
-			var resultantUp = (Math.cos(rocket.rotation) * rocket.thrust[stage] * 1000) - gravity(rocket, planet, false);
-			var resultantSideways = (Math.sin(rocket.rotation) * rocket.thrust[stage] * 1000);
+			var resultantUp = (Math.cos(rocket.rotation) * rocket.thrust[stage] * 1000) - gravity(rocket, planet, false) - airResistance["vertical"];
+			var resultantSideways = (Math.sin(rocket.rotation) * rocket.thrust[stage] * 1000)  - airResistance["horizontal"];
 			rocket.currMass -= (rocket.massInitial[stage] - rocket.massFinal[stage]) / (rocket.burnTime[stage] * frequencyOfCalc);
 			
 
 			//Change this section to accurately use XY co-ordinates from the resultant forces
 			var vAcceleration = resultantUp / rocket.currMass;
 			var hAcceleration = resultantSideways / rocket.currMass;
-
 			rocket.yAcceleration = vAcceleration*Math.cos(canvasRotation) - hAcceleration * Math.sin(canvasRotation);
 			rocket.xAcceleration = vAcceleration*Math.sin(canvasRotation) + hAcceleration * Math.cos(canvasRotation);
 			
