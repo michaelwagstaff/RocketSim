@@ -107,7 +107,7 @@ $("body").on('click','.useShip', function(){
 			$(".formContainer").append(formElement);
 		}
 	}
-	addStage(0);
+	updateSim();
 	$(".shipSelector").hide();
 });
 var formCount = 0;
