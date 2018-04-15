@@ -1,5 +1,4 @@
 var falcon9 = JSON.parse('{"Name":"Falcon 9","numStages":"2","stockShip":"true","Stage 1":{"thrust":7607,"massInitial":421300,"massFinal":25600,"burnTime":162,"drag":0.25},"Stage 2":{"thrust":934,"massInitial":96570,"massFinal":3900,"burnTime":397,"drag":0.25}}');
-console.log(falcon9);
 var G = 6.67408E-11;
 class Orbit
 {
@@ -67,7 +66,6 @@ class Planet
 }
 function gravity(rocket, planet, pathfinding)
 {
-	//console.log(rocket.currMass);
 	var relativeGravity = 1;
 	if(pathfinding)
 	{
@@ -90,7 +88,6 @@ function findAirResistance(rocket, stage)
 	var total = Math.sqrt(Math.pow(rocket.vVelocity, 2) + Math.pow(rocket.hVelocity, 2));
 	//Declare an array
 	pressure = standardPressure * Math.pow(1 - (tempLapseRate * rocket.height) / standardTemp, (surfaceGravity * massOfAir) / (gasConstant * tempLapseRate));
-	//console.log("Air Pressure: {0}", pressure);
 	var specificGasConstant = gasConstant / massOfAir;
 	density = pressure / (specificGasConstant * 273); //Using 273 in place of current temperature
 	airResistance = rocket.coefficientOfDrag[stage] * density * Math.pow(total, 2) * Math.PI * Math.pow(5.2, 2) / 2;
@@ -112,15 +109,10 @@ function main(rocketInput)
 	for(var i = 1; i<=num;i++)
 	{
 		var s = "Stage " + i;
-		console.log(r[s]["massInitial"]);
 		rocket.addStage(r[s]["thrust"], r[s]["massInitial"], r[s]["massFinal"], r[s]["burnTime"], r[s]["drag"]);
 	}
 	console.log(rocket);
-	//rocket.addStage(7607, 421300, 25600, 162, 0.25);
-	//rocket.addStage(934, 96570, 3900, 397, 0.25);
-	console.log(planet["radius"]);
 	canvasScale = (canvas.height * 0.3) / planet.radius;
-	console.log(canvasScale);
 	findOrbitHeight(rocket, planet);
 }
 function findOrbitHeight(rocket, planet)
@@ -135,38 +127,18 @@ function findOrbitHeight(rocket, planet)
 		ctx.beginPath();
 		var height = stableOrbit(orbit, rocket, planet, 100);
 		orbit["apogee"] = height;
-		console.log("drawn");
-		//ctx.stroke();
-		console.log("filled");
 		console.log("apogee: " + orbit["apogee"]);
 	}
 	orbit["apogee"] = originalHeight;
-	/*
-	if(rocket.relativeGravity<=0.01)
-	{
-		//drawOrbit(rocket,planet);
-	}
-	else
-	{
-		
-	}
-	*/
 	finishArc(rocket,100, planet);
 	ctx.stroke();
-	/*
-	
-	console.log("apogee: " + orbit["apogee"]);
-	reset();
-	height = stableOrbit(orbit, rocket, planet, 100);
-	*/
-	
 }
 function stableOrbit(orbit, rocket, planet, frequencyOfCalc)
 {
 	var count = rocket.burnTime.length;
 	var toApogee;
 	
-	console.log(count)
+	console.log("Stages: " + count)
 	for(var stage = 0;stage<count; stage++)
 	{
 		var remainingBurnTime = 0;
@@ -175,7 +147,7 @@ function stableOrbit(orbit, rocket, planet, frequencyOfCalc)
 		{
 			rocket.currMass += rocket.massInitial[i];
 			remainingBurnTime += rocket.burnTime[i] * frequencyOfCalc;
-			console.log("REMAINING BURN TIME: " + remainingBurnTime);
+			console.log("Remaining Burn Time: " + remainingBurnTime);
 		}
 		for (i = 0; i < rocket.burnTime[stage] * frequencyOfCalc; i++)
 		{
@@ -261,29 +233,17 @@ function stableOrbit(orbit, rocket, planet, frequencyOfCalc)
 
 			rocket.vVelocity = rocket.yVelocity*Math.cos(canvasRotation) + rocket.xVelocity*Math.sin(canvasRotation);
 			rocket.hVelocity = - rocket.yVelocity*Math.sin(canvasRotation) + rocket.xVelocity*Math.cos(canvasRotation);
-			//rocket.height += rocket.vVelocity /frequencyOfCalc;
 			rocket.height = Math.sqrt(Math.pow(rocket.xPosition, 2) + Math.pow(rocket.yPosition, 2)) - planet.radius;
 
 
 			if(i % 20 == 0)
 			{
-				//console.log(rocket.hVelocity + "/" + idealVelocity + "at " + canvasRotation);
 				draw(rocket, frequencyOfCalc/20,planet);
-			}
-			if(i%300 == 0)
-			{
-				console.log("Vertical: " + (gravity(rocket,planet,true) + requiredImpulse/(remainingBurnTime/frequencyOfCalc) + 0)); //airResistance["vertical"]
-				console.log("Hyp: " + (rocket.thrust[stage] * 1000));
-				console.log("Vertical Acceleration: " + vAcceleration + ", Y acceleration:" + rocket.yAcceleration + ", X acceleration: " + rocket.xAcceleration + ", rotation" + canvasRotation);
-				//console.log("Vertical acceleration: " + vAcceleration + ", Y acceleration: " +  rocket.yAcceleration);
-				console.log("Horizontal Velocity: " + rocket.hVelocity + ", Vertical Velocity: " + rocket.vVelocity);
-				console.log("Height: " + rocket.height);
 			}
 		}
 		console.log("Stage Seperation");
 	}
 	console.log("Burn Complete");
-	console.log(rocket.height);
 	return rocket.height;
 }
 
@@ -296,7 +256,6 @@ function drawOrbit(rocket,planet)
 }
 function finishArc(rocket, frequencyOfCalc, planet)
 {
-	//ctx.beginPath();
 	if(rocket.vVelocity>100)
 	{
 		frequencyOfCalc /= 10;
@@ -320,19 +279,8 @@ function finishArc(rocket, frequencyOfCalc, planet)
 		rocket.height = Math.sqrt(Math.pow(rocket.xPosition, 2) + Math.pow(rocket.yPosition, 2)) - planet.radius;
 		if(i % 20 == 0)
 		{
-			//console.log(rocket.xPosition + ", " +rocket.yPosition + "at " + canvasRotation);
 			draw(rocket, frequencyOfCalc/20, planet);
 		}
-		if(i%300 == 0)
-		{
-			
-			console.log("Vertical Acceleration: " + vAcceleration + ", Y acceleration:" + rocket.yAcceleration + ", X acceleration: " + rocket.xAcceleration + ", rotation" + canvasRotation);
-			console.log("Current Mass: " + rocket.currMass);
-			console.log("X Velocity: " + rocket.xVelocity + ", Y Velocity: " + rocket.yVelocity);
-			console.log("Horizontal Velocity: " + rocket.hVelocity + ", Vertical Velocity: " + rocket.vVelocity);
-			
-		}
-		
 	}
 	ctx.stroke();
 }
