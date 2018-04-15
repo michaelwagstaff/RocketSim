@@ -12,14 +12,14 @@ unset($data["Name"]);
 unset($data["userID"]);
 unset($data["RocketID"]);
 $date = new DateTime();
-$info["DateCreated"] = date('Y-m-d H:i:s',$date->getTimestamp());
+$info["DateCreated"] = date('Y-m-d',$date->getTimestamp());
 echo $info["DateCreated"];
 
 $mysqli->query("DELETE FROM Stages WHERE RocketID = '".$info["RocketID"]."'");
 $mysqli->query("DELETE FROM Rockets WHERE RocketID = '".$info["RocketID"]."' AND UserID = '".$googleID."'");
 
 
-$mysqli->query("INSERT INTO Rockets VALUES('".$info["RocketID"]."','".$googleID."','".$info["Name"]."','2018-04-09')");
+$mysqli->query("INSERT INTO Rockets VALUES('".$info["RocketID"]."','".$googleID."','".$info["Name"]."','".$info["DateCreated"]."')");
 
 $i = 1;
 foreach($data as $s)

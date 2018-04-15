@@ -11,10 +11,10 @@ unset($data["Name"]);
 unset($data["userID"]);
 $info["RocketID"] = getAlphaNumericID();
 $date = new DateTime();
-$info["DateCreated"] = date('Y-m-d H:i:s',$date->getTimestamp());
+$info["DateCreated"] = date('Y-m-d',$date->getTimestamp());
 
 
-$mysqli->query("INSERT INTO Rockets VALUES('".$info["RocketID"]."','".$googleID."','".$info["Name"]."','2018-04-09')");
+$mysqli->query("INSERT INTO Rockets VALUES('".$info["RocketID"]."','".$googleID."','".$info["Name"]."','".$info["DateCreated"]."')");
 
 $i = 1;
 foreach($data as $s)
